@@ -34,6 +34,18 @@
 
   function loadDashboards() {
     var fetches = config.dashboards.map(function (dash) {
+      if (!dash.dataUrl) {
+        // Tool/app entries without card data (e.g. configurator)
+        dashboardData[dash.id] = { cards: [] };
+        // Optionally fetch build info
+        if (dash.buildUrl) {
+          return fetch(dash.buildUrl)
+            .then(function (r) { return r.ok ? r.text() : ""; })
+            .then(function (txt) { dashboardData[dash.id].build = txt.trim(); })
+            .catch(function () {});
+        }
+        return Promise.resolve();
+      }
       return fetch(dash.dataUrl)
         .then(function (r) {
           if (!r.ok) throw new Error("HTTP " + r.status);
@@ -233,9 +245,7 @@
     config.dashboards.forEach(function (dash) {
       var data = dashboardData[dash.id] || { cards: [] };
       var cards = data.cards || [];
-      var inProgress = cards.filter(function (c) { return c.status === "in-progress"; }).length;
-      var done = cards.filter(function (c) { return c.status === "done"; }).length;
-      var backlog = cards.filter(function (c) { return c.status === "backlog"; }).length;
+      var isTool = dash.category === "tool";
 
       html += '<div class="dash-card" data-dash="' + dash.id + '">';
       html += '<div class="dash-card-header">';
@@ -243,13 +253,27 @@
       html += '<div><div class="dash-card-name">' + esc(dash.name) + '</div>';
       html += '<div class="dash-card-desc">' + esc(dash.description) + '</div></div>';
       html += '</div>';
-      html += '<div class="dash-card-stats">';
-      html += '<div class="dash-stat"><div class="dash-stat-value">' + inProgress + '</div><div class="dash-stat-label">Active</div></div>';
-      html += '<div class="dash-stat"><div class="dash-stat-value">' + backlog + '</div><div class="dash-stat-label">Backlog</div></div>';
-      html += '<div class="dash-stat"><div class="dash-stat-value">' + done + '</div><div class="dash-stat-label">Done</div></div>';
-      html += '<div class="dash-stat"><div class="dash-stat-value">' + cards.length + '</div><div class="dash-stat-label">Total</div></div>';
-      html += '</div>';
-      html += '<div class="dash-card-link">Open dashboard →</div>';
+
+      if (isTool) {
+        // Tool/app card — show build info instead of task stats
+        var build = data.build || "—";
+        html += '<div class="dash-card-stats">';
+        html += '<div class="dash-stat"><div class="dash-stat-value" style="font-size:14px;font-family:monospace">' + esc(build) + '</div><div class="dash-stat-label">Build</div></div>';
+        html += '<div class="dash-stat"><div class="dash-stat-value" style="color:var(--cc-green)">●</div><div class="dash-stat-label">Live</div></div>';
+        html += '</div>';
+        html += '<div class="dash-card-link">Open configurator →</div>';
+      } else {
+        var inProgress = cards.filter(function (c) { return c.status === "in-progress"; }).length;
+        var done = cards.filter(function (c) { return c.status === "done"; }).length;
+        var backlog = cards.filter(function (c) { return c.status === "backlog"; }).length;
+        html += '<div class="dash-card-stats">';
+        html += '<div class="dash-stat"><div class="dash-stat-value">' + inProgress + '</div><div class="dash-stat-label">Active</div></div>';
+        html += '<div class="dash-stat"><div class="dash-stat-value">' + backlog + '</div><div class="dash-stat-label">Backlog</div></div>';
+        html += '<div class="dash-stat"><div class="dash-stat-value">' + done + '</div><div class="dash-stat-label">Done</div></div>';
+        html += '<div class="dash-stat"><div class="dash-stat-value">' + cards.length + '</div><div class="dash-stat-label">Total</div></div>';
+        html += '</div>';
+        html += '<div class="dash-card-link">Open dashboard →</div>';
+      }
       html += '</div>';
     });
 

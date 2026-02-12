@@ -1,15 +1,25 @@
 {
-  "version": 1,
-  "lastUpdated": "2026-02-12T17:30:00Z",
+  "version": 2,
+  "lastUpdated": "2026-02-12T19:30:00Z",
   "dashboards": [
     {
       "id": "shed",
       "name": "Garden Buildings",
       "emoji": "🏠",
-      "description": "Parametric shed configurator & business",
+      "description": "Parametric shed project board — tasks, ideas, decisions",
       "dataUrl": "https://andrewsgparsons-source.github.io/shed-project-board/data/cards.json",
       "boardUrl": "https://andrewsgparsons-source.github.io/shed-project-board/",
       "category": "business"
+    },
+    {
+      "id": "shed-staging",
+      "name": "Shed Configurator",
+      "emoji": "🔧",
+      "description": "Parametric 3D configurator — live staging build",
+      "dataUrl": null,
+      "boardUrl": "https://andrewsgparsons-source.github.io/Parametric-shed2-staging/",
+      "category": "tool",
+      "buildUrl": "https://andrewsgparsons-source.github.io/Parametric-shed2-staging/build.txt"
     },
     {
       "id": "farm",
@@ -20,6 +30,24 @@
       "boardUrl": "https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/",
       "category": "business",
       "auth": true
+    },
+    {
+      "id": "forge",
+      "name": "Forge AI",
+      "emoji": "☕",
+      "description": "AI Transition Coaching — vision, proof of concept, go to market",
+      "dataUrl": "https://andrewsgparsons-source.github.io/forge-ai/data/cards.json",
+      "boardUrl": "https://andrewsgparsons-source.github.io/forge-ai/dashboard/",
+      "category": "business"
+    },
+    {
+      "id": "growcabin",
+      "name": "GrowCabin",
+      "emoji": "🌱",
+      "description": "Controlled-environment home growing — mushrooms & microgreens",
+      "dataUrl": "https://andrewsgparsons-source.github.io/GrowCabin/data/cards.json",
+      "boardUrl": "https://andrewsgparsons-source.github.io/GrowCabin/dashboard/",
+      "category": "business"
     }
   ],
   "sections": [
