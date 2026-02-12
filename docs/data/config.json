@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-02-12T17:30:00Z",
+  "dashboards": [
+    {
+      "id": "shed",
+      "name": "Garden Buildings",
+      "emoji": "🏠",
+      "description": "Parametric shed configurator & business",
+      "dataUrl": "https://andrewsgparsons-source.github.io/shed-project-board/data/cards.json",
+      "boardUrl": "https://andrewsgparsons-source.github.io/shed-project-board/",
+      "category": "business"
+    },
+    {
+      "id": "farm",
+      "name": "Whelpley Farm",
+      "emoji": "🌾",
+      "description": "Family partnership — trees, arable, livery",
+      "dataUrl": "https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/data/cards.json",
+      "boardUrl": "https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/",
+      "category": "business",
+      "auth": true
+    }
+  ],
+  "sections": [
+    { "id": "today", "label": "Today", "icon": "🎯" },
+    { "id": "businesses", "label": "Businesses", "icon": "📊" },
+    { "id": "james", "label": "James", "icon": "🤖" },
+    { "id": "personal", "label": "Personal", "icon": "👤" },
+    { "id": "ideas", "label": "Ideas", "icon": "💡" }
+  ]
+}

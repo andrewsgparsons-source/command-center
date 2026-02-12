@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f1419">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Command Center — Andrew & James</title>
+  <link rel="stylesheet" href="src/ui/styles.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="cc-brand">
+        <span class="cc-logo">⚡</span>
+        <div class="cc-brand-text">
+          <span class="cc-title">Command Center</span>
+          <span class="cc-subtitle">Andrew & James</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-status" id="sidebarStatus">Loading...</div>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="mobile-header" id="mobileHeader">
+    <button class="mobile-menu-btn" id="menuBtn">☰</button>
+    <span class="mobile-title">Command Center</span>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content" id="mainContent">
+    <div class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p>Connecting to dashboards...</p>
+    </div>
+  </main>
+
+  <script src="src/app.js"></script>
+</body>
+</html>
