@@ -1,5 +1,5 @@
 /* ============================================================
-   Command Center — app.js
+   Solution Planner — app.js
    Aggregates data from child dashboards, renders unified view
    ============================================================ */
 
