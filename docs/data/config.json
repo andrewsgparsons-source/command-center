@@ -53,6 +53,7 @@
   "sections": [
     { "id": "today", "label": "Today", "icon": "🎯" },
     { "id": "businesses", "label": "Businesses", "icon": "📊" },
+    { "id": "incubator", "label": "Incubator", "icon": "🧪" },
     { "id": "james", "label": "James", "icon": "🤖" },
     { "id": "personal", "label": "Personal", "icon": "👤" },
     { "id": "ideas", "label": "Ideas", "icon": "💡" }
