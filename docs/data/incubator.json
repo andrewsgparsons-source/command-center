@@ -1,6 +1,17 @@
 {
   "version": 1,
-  "lastUpdated": "2026-02-13T16:15:00Z",
+  "lastUpdated": "2026-02-14T18:15:00Z",
   "description": "Embryonic ideas and concepts that don't yet have their own project dashboard. Ideas graduate to their own dashboard when mature enough.",
-  "ideas": []
+  "ideas": [
+    {
+      "id": "1",
+      "title": "Business Development Management System",
+      "description": "World-class business development system for Andrew's garden buildings business. End-to-end: lead capture (from configurator), CRM, quoting, scheduling, project tracking, customer communication. Must work for a bespoke builder, not a widget seller.",
+      "stage": "developing",
+      "priority": "high",
+      "notes": "Andrew's directive 14 Feb 2026: 'I want to make you responsible for delivering a world class business development management system.'\n\nThis is James's PRIMARY responsibility.\n\nResearch phases:\n1. Market research — what systems exist, what's best-in-class\n2. Andrew's business workflow mapping — enquiry to completion\n3. Gap analysis — what's missing today\n4. System architecture proposal — build/buy/integrate\n5. Feature spec — detailed requirements\n6. Implementation plan — phased delivery roadmap\n7. Prototype / MVP\n\nKey considerations:\n- Configurator is the front door — leads come from 3D config sessions\n- Bespoke business = every job is different (not cookie-cutter)\n- Site visits, custom quoting, build scheduling\n- Small team — system must be lean, not enterprise bloat\n- Automation opportunities: config → lead → quote → schedule",
+      "createdAt": "2026-02-14T18:09:00Z",
+      "updatedAt": "2026-02-14T18:15:00Z"
+    }
+  ]
 }
