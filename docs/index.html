@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="theme-color" content="#0f1419">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -45,6 +45,17 @@
     </div>
   </main>
 
+  <script>
+    // Early mobile detection — force mobile class before app.js runs
+    (function() {
+      var isMobile = window.innerWidth <= 768 || screen.width <= 768 || 
+        navigator.maxTouchPoints > 0 || 
+        /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        document.documentElement.classList.add('sp-mobile');
+      }
+    })();
+  </script>
   <script src="src/app.js"></script>
 </body>
 </html>

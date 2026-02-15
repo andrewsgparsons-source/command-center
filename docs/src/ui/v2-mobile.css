@@ -482,51 +482,31 @@
 }
 
 /* ===== MOBILE: show bottom nav, adjust layout ===== */
+/* Trigger on EITHER media query OR JS-detected mobile class */
 @media (max-width: 768px) {
-  .v2-bottom-nav {
-    display: flex !important;
-  }
-
-  /* Adjust main content to not be hidden behind bottom nav */
-  .main-content {
-    padding-bottom: 80px !important;
-  }
-
-  /* Bigger touch targets */
-  .v2-item {
-    min-height: 52px;
-  }
-
-  .v2-question-card {
-    min-height: 68px;
-  }
-
-  /* Greeting sizing */
-  .v2-greeting h1 {
-    font-size: 22px;
-  }
-
-  /* Mini kanban scrolls horizontally */
-  .v2-mini-kanban {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .v2-kanban-col {
-    min-width: 160px;
-  }
-
-  /* Stats strip smaller */
-  .v2-stat-value {
-    font-size: 18px;
-  }
-
-  /* Money grid stays 3-col but smaller */
-  .v2-money-value {
-    font-size: 18px;
-  }
+  .v2-bottom-nav { display: flex !important; }
+  .main-content { padding-bottom: 80px !important; }
+  .v2-item { min-height: 52px; }
+  .v2-question-card { min-height: 68px; }
+  .v2-greeting h1 { font-size: 22px; }
+  .v2-mini-kanban { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .v2-kanban-col { min-width: 160px; }
+  .v2-stat-value { font-size: 18px; }
+  .v2-money-value { font-size: 18px; }
 }
+
+/* JS-detected mobile (catches "Desktop site" mode in Chrome) */
+html.sp-mobile .v2-bottom-nav { display: flex !important; }
+html.sp-mobile .main-content { margin-left: 0 !important; padding-bottom: 80px !important; padding-top: 68px !important; }
+html.sp-mobile .sidebar { transform: translateX(-100%) !important; }
+html.sp-mobile .sidebar.open { transform: translateX(0) !important; box-shadow: 4px 0 24px rgba(0,0,0,0.15) !important; }
+html.sp-mobile .mobile-header { display: flex !important; }
+html.sp-mobile .v2-item { min-height: 52px; }
+html.sp-mobile .v2-question-card { min-height: 68px; }
+html.sp-mobile .v2-greeting h1 { font-size: 22px; }
+html.sp-mobile .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+html.sp-mobile .dashboard-grid { grid-template-columns: 1fr !important; }
+html.sp-mobile .view-title { font-size: 20px !important; }
 
 /* ===== COPY BUTTON ===== */
 .v2-copy-btn {
