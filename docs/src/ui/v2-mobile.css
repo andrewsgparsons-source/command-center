@@ -1,0 +1,569 @@
+/* ============================================================
+   SOLUTION PLANNER v2 — Mobile-First Components
+   Today view, 8 Questions, Bottom Nav
+   ============================================================ */
+
+/* ===== V2 TODAY VIEW ===== */
+.v2-today, .v2-questions, .v2-question-detail {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.v2-greeting h1 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cc-text);
+  margin-bottom: 2px;
+}
+
+.v2-date {
+  font-size: 14px;
+  color: var(--cc-text-muted);
+  margin-bottom: 20px;
+}
+
+/* Sections */
+.v2-section {
+  background: var(--cc-bg-surface);
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.v2-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.v2-section-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.v2-section-title {
+  flex: 1;
+  color: var(--cc-text);
+}
+
+.v2-section-count {
+  background: var(--cc-red-bg);
+  color: var(--cc-red);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 12px;
+  min-width: 28px;
+  text-align: center;
+}
+
+.v2-collapsible {
+  cursor: pointer;
+}
+
+.v2-chevron {
+  color: var(--cc-text-muted);
+  font-size: 16px;
+}
+
+.v2-collapsed {
+  display: none;
+}
+
+/* Items */
+.v2-items {
+  padding: 0 8px 8px;
+}
+
+.v2-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--cc-radius-sm);
+  transition: background var(--cc-transition);
+  min-height: 48px;
+}
+
+.v2-item:active {
+  background: var(--cc-bg-hover);
+}
+
+.v2-item-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+  padding-top: 1px;
+}
+
+.v2-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.v2-item-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--cc-text);
+  line-height: 1.3;
+}
+
+.v2-item-meta {
+  font-size: 12px;
+  color: var(--cc-text-muted);
+  margin-top: 2px;
+}
+
+.v2-priority-high {
+  color: var(--cc-red);
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.v2-more {
+  color: var(--cc-text-muted);
+  font-size: 13px;
+  justify-content: center;
+  padding: 8px;
+}
+
+.v2-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--cc-green);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== JAMES CARD ===== */
+.v2-james-card {
+  padding: 12px 16px 16px;
+}
+
+.v2-james-label {
+  font-size: 12px;
+  color: var(--cc-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.v2-james-task {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cc-primary);
+  margin-bottom: 8px;
+}
+
+.v2-progress-bar {
+  height: 8px;
+  background: var(--cc-bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.v2-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cc-primary), var(--cc-primary-light));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.v2-james-needs {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cc-border);
+}
+
+.v2-james-need {
+  font-size: 13px;
+  color: var(--cc-text-secondary);
+  padding: 2px 0;
+}
+
+/* ===== MONEY SECTION ===== */
+.v2-money-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.v2-money-item {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: var(--cc-radius-sm);
+}
+
+.v2-money-green { background: var(--cc-green-bg); }
+.v2-money-red { background: var(--cc-red-bg); }
+.v2-money-grey { background: var(--cc-bg-elevated); }
+
+.v2-money-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cc-text);
+}
+
+.v2-money-green .v2-money-value { color: var(--cc-green); }
+.v2-money-red .v2-money-value { color: var(--cc-red); }
+
+.v2-money-label {
+  font-size: 11px;
+  color: var(--cc-text-muted);
+  margin-top: 2px;
+}
+
+.v2-money-note {
+  font-size: 11px;
+  color: var(--cc-text-muted);
+  text-align: center;
+  padding: 0 12px 12px;
+  font-style: italic;
+}
+
+/* ===== STATS STRIP ===== */
+.v2-stats-strip {
+  display: flex;
+  justify-content: space-around;
+  background: var(--cc-bg-surface);
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  padding: 12px 0;
+  margin-bottom: 16px;
+}
+
+.v2-stat {
+  text-align: center;
+}
+
+.v2-stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cc-primary);
+}
+
+.v2-stat-label {
+  display: block;
+  font-size: 10px;
+  color: var(--cc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== 8 QUESTIONS ===== */
+.v2-question-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--cc-bg-surface);
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: all var(--cc-transition);
+  min-height: 64px;
+}
+
+.v2-clickable {
+  cursor: pointer;
+}
+
+.v2-clickable:active {
+  background: var(--cc-bg-hover);
+  transform: scale(0.99);
+}
+
+.v2-question-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.v2-question-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.v2-question-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cc-text);
+}
+
+.v2-question-stat {
+  font-size: 12px;
+  color: var(--cc-text-muted);
+  margin-top: 2px;
+}
+
+.v2-question-arrow {
+  font-size: 24px;
+  color: var(--cc-text-muted);
+  flex-shrink: 0;
+}
+
+/* ===== QUESTION DETAIL ===== */
+.v2-back {
+  font-size: 14px;
+  color: var(--cc-primary);
+  cursor: pointer;
+  padding: 8px 0 16px;
+  font-weight: 500;
+}
+
+.v2-back:active {
+  opacity: 0.7;
+}
+
+/* Mini kanban */
+.v2-mini-kanban {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.v2-kanban-col {
+  flex: 1;
+  min-width: 140px;
+}
+
+.v2-kanban-header {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 10px;
+  border-radius: var(--cc-radius-sm) var(--cc-radius-sm) 0 0;
+  margin-bottom: 4px;
+}
+
+.v2-kanban-doing { background: var(--cc-primary-bg-strong); color: var(--cc-primary); }
+.v2-kanban-next { background: var(--cc-amber-bg); color: var(--cc-amber); }
+.v2-kanban-done { background: var(--cc-green-bg); color: var(--cc-green); }
+
+.v2-kanban-card {
+  font-size: 12px;
+  padding: 8px 10px;
+  background: var(--cc-bg-surface);
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius-sm);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.v2-done-card {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Business rows */
+.v2-biz-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--cc-border);
+}
+
+.v2-biz-row:last-child { border-bottom: none; }
+
+.v2-biz-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.v2-biz-stats {
+  font-size: 12px;
+  color: var(--cc-text-muted);
+}
+
+/* Direction cards */
+.v2-direction-card {
+  padding: 16px;
+  border-bottom: 1px solid var(--cc-border);
+}
+
+.v2-direction-card:last-child { border-bottom: none; }
+
+.v2-direction-header {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.v2-direction-desc {
+  font-size: 12px;
+  color: var(--cc-text-muted);
+  margin-bottom: 10px;
+}
+
+.v2-direction-stats {
+  font-size: 12px;
+  color: var(--cc-text-secondary);
+  margin-top: 6px;
+}
+
+/* ===== BOTTOM NAV ===== */
+.v2-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--cc-bg-surface);
+  border-top: 1px solid var(--cc-border);
+  z-index: 300;
+  padding: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.v2-bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.v2-bnav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px 6px;
+  flex: 1;
+  cursor: pointer;
+  transition: all var(--cc-transition);
+  color: var(--cc-text-muted);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 56px;
+}
+
+.v2-bnav-item.active {
+  color: var(--cc-primary);
+}
+
+.v2-bnav-item:active {
+  background: var(--cc-bg-hover);
+}
+
+.v2-bnav-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.v2-bnav-label {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+/* ===== DESKTOP: hide bottom nav, show sidebar ===== */
+@media (min-width: 769px) {
+  .v2-bottom-nav {
+    display: none !important;
+  }
+}
+
+/* ===== MOBILE: show bottom nav, adjust layout ===== */
+@media (max-width: 768px) {
+  .v2-bottom-nav {
+    display: flex !important;
+  }
+
+  /* Adjust main content to not be hidden behind bottom nav */
+  .main-content {
+    padding-bottom: 80px !important;
+  }
+
+  /* Bigger touch targets */
+  .v2-item {
+    min-height: 52px;
+  }
+
+  .v2-question-card {
+    min-height: 68px;
+  }
+
+  /* Greeting sizing */
+  .v2-greeting h1 {
+    font-size: 22px;
+  }
+
+  /* Mini kanban scrolls horizontally */
+  .v2-mini-kanban {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .v2-kanban-col {
+    min-width: 160px;
+  }
+
+  /* Stats strip smaller */
+  .v2-stat-value {
+    font-size: 18px;
+  }
+
+  /* Money grid stays 3-col but smaller */
+  .v2-money-value {
+    font-size: 18px;
+  }
+}
+
+/* ===== COPY BUTTON ===== */
+.v2-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--cc-text-muted);
+  background: var(--cc-bg-elevated);
+  border: 1px solid var(--cc-border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all var(--cc-transition);
+}
+
+.v2-copy-btn:active {
+  background: var(--cc-primary-bg);
+  color: var(--cc-primary);
+}
+
+.v2-copy-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cc-secondary);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.v2-copy-toast.visible {
+  opacity: 1;
+}

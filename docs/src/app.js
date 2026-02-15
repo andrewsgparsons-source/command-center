@@ -69,6 +69,7 @@
       return loadDashboards();
     }).then(function () {
       buildSidebar();
+      buildMobileNav();
       switchView(currentView);
       updateFooter();
     }).catch(function (err) {
@@ -162,14 +163,19 @@
 
     var main = document.getElementById("mainContent");
 
-    if (viewName === "today") renderToday(main);
+    if (viewName === "today") renderTodayV2(main);
+    else if (viewName === "questions") renderQuestions(main);
     else if (viewName === "businesses") renderBusinesses(main);
     else if (viewName === "incubator") renderIncubator(main);
     else if (viewName === "james") renderJames(main);
     else if (viewName === "personal") renderPersonal(main);
     else if (viewName === "ideas") renderIdeas(main);
     else if (viewName.indexOf("dash-") === 0) renderDashDetail(main, viewName.replace("dash-", ""));
-    else renderToday(main);
+    else if (viewName.indexOf("q-") === 0) renderQuestionDetail(main, viewName.replace("q-", ""));
+    else renderTodayV2(main);
+
+    // Update mobile bottom nav
+    updateMobileNav(viewName);
 
     main.scrollTop = 0;
   }
@@ -238,74 +244,364 @@
     document.getElementById("sidebarStatus").textContent = total + " items across " + dashCount + " dashboards" + suffix;
   }
 
-  // ── VIEW: Today ──
-  function renderToday(container) {
+  // ── VIEW: Today (legacy, kept for reference) ──
+  function renderToday(container) { renderTodayV2(container); }
+
+  // ── VIEW: Today V2 — 3-section layout ──
+  function renderTodayV2(container) {
     var all = getAllCards();
     var inProgress = all.filter(function (c) { return c.status === "in-progress"; });
     var highBacklog = all.filter(function (c) { return c.priority === "high" && c.status === "backlog"; });
     var recentDone = all.filter(function (c) { return c.status === "done" && c.completedAt; })
       .sort(function (a, b) { return b.completedAt.localeCompare(a.completedAt); })
-      .slice(0, 5);
-
+      .slice(0, 3);
     var totalCards = all.length;
     var doneCards = all.filter(function (c) { return c.status === "done"; }).length;
-    var pct = totalCards ? Math.round((doneCards / totalCards) * 100) : 0;
     var incCount = incubatorData ? incubatorData.ideas.length : 0;
+    var urgentItems = inProgress.concat(highBacklog);
 
-    var html = '<div class="view-header">' +
-      '<h1 class="view-title">🎯 Today</h1>' +
-      '<p class="view-subtitle">What matters right now — across everything</p>' +
-      '</div>';
+    // Time-based greeting
+    var hour = new Date().getHours();
+    var greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-    html += '<div class="kpi-grid">';
-    html += kpi("🔨", inProgress.length, "In Progress", "blue");
-    html += kpi("🔴", highBacklog.length, "High Priority", "red");
-    html += kpi("✅", doneCards, "Completed", "green");
-    html += kpi("🧪", incCount, "Incubating", "purple");
+    var html = '<div class="v2-today">';
+
+    // Header
+    html += '<div class="v2-greeting">';
+    html += '<h1>' + greeting + ', Andrew</h1>';
+    html += '<p class="v2-date">' + new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) + '</p>';
     html += '</div>';
 
-    if (inProgress.length > 0) {
-      html += '<div class="panel">';
-      html += '<div class="panel-header"><span class="panel-title">🔨 In Progress</span></div>';
-      html += '<div class="panel-body no-pad">';
-      inProgress.forEach(function (c) { html += taskItem(c); });
-      html += '</div></div>';
-    }
+    // Section 1: NEEDS ATTENTION
+    html += '<div class="v2-section v2-urgent">';
+    html += '<div class="v2-section-header">';
+    html += '<span class="v2-section-icon">🔴</span>';
+    html += '<span class="v2-section-title">Needs Attention</span>';
+    html += '<span class="v2-section-count">' + urgentItems.length + '</span>';
+    html += '</div>';
 
-    if (highBacklog.length > 0) {
-      html += '<div class="panel">';
-      html += '<div class="panel-header"><span class="panel-title">🔴 High Priority Backlog</span><span class="panel-action">' + highBacklog.length + ' items</span></div>';
-      html += '<div class="panel-body no-pad">';
-      highBacklog.slice(0, 10).forEach(function (c) { html += taskItem(c); });
-      if (highBacklog.length > 10) html += '<div class="task-item"><div class="task-info"><span class="task-meta">+ ' + (highBacklog.length - 10) + ' more...</span></div></div>';
-      html += '</div></div>';
-    }
-
-    // Incubator preview on Today view
-    if (incCount > 0) {
-      html += '<div class="panel">';
-      html += '<div class="panel-header"><span class="panel-title">🧪 Incubating Ideas</span><span class="panel-action" id="goToIncubator">' + incCount + ' ideas →</span></div>';
-      html += '<div class="panel-body no-pad">';
-      incubatorData.ideas.slice(0, 3).forEach(function (idea) {
-        html += incubatorItem(idea);
+    if (urgentItems.length === 0) {
+      html += '<div class="v2-empty">All clear — nothing urgent right now ✓</div>';
+    } else {
+      html += '<div class="v2-items">';
+      urgentItems.slice(0, 8).forEach(function (c) {
+        var statusIcon = c.status === "in-progress" ? "🔨" : "⚠️";
+        html += '<div class="v2-item">';
+        html += '<span class="v2-item-icon">' + statusIcon + '</span>';
+        html += '<div class="v2-item-body">';
+        html += '<div class="v2-item-title">' + esc(c.title) + '</div>';
+        html += '<div class="v2-item-meta">' + (c._sourceEmoji || "") + ' ' + (c._sourceName || "") + (c.priority === "high" ? ' · <span class="v2-priority-high">HIGH</span>' : '') + '</div>';
+        html += '</div></div>';
       });
-      if (incCount > 3) html += '<div class="task-item"><div class="task-info"><span class="task-meta">+ ' + (incCount - 3) + ' more in incubator...</span></div></div>';
-      html += '</div></div>';
+      if (urgentItems.length > 8) {
+        html += '<div class="v2-item v2-more">+ ' + (urgentItems.length - 8) + ' more items</div>';
+      }
+      html += '</div>';
     }
+    html += '</div>';
 
+    // Section 2: JAMES STATUS
+    html += '<div class="v2-section v2-james">';
+    html += '<div class="v2-section-header">';
+    html += '<span class="v2-section-icon">🤖</span>';
+    html += '<span class="v2-section-title">James</span>';
+    html += '</div>';
+
+    html += '<div class="v2-james-card">';
+    html += '<div class="v2-james-working">';
+    html += '<div class="v2-james-label">Working on</div>';
+    html += '<div class="v2-james-task">Business OS Research</div>';
+    html += '<div class="v2-progress-bar"><div class="v2-progress-fill" style="width: 80%"></div></div>';
+    html += '<div class="v2-james-label" style="margin-top:4px;font-size:11px">8 of 10 research phases complete</div>';
+    html += '</div>';
+
+    // Decisions needed from Andrew
+    var decisionsNeeded = all.filter(function(c) { 
+      return c.status === "backlog" && c.priority === "high" && 
+        (c.title.toLowerCase().indexOf("decision") > -1 || c.title.toLowerCase().indexOf("choose") > -1 || c.title.toLowerCase().indexOf("approve") > -1);
+    });
+    if (decisionsNeeded.length > 0) {
+      html += '<div class="v2-james-needs">';
+      html += '<div class="v2-james-label">Needs from you</div>';
+      decisionsNeeded.slice(0, 3).forEach(function(c) {
+        html += '<div class="v2-james-need">• ' + esc(c.title) + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Section 3: MONEY (lightweight)
+    html += '<div class="v2-section v2-money">';
+    html += '<div class="v2-section-header">';
+    html += '<span class="v2-section-icon">💰</span>';
+    html += '<span class="v2-section-title">Money</span>';
+    html += '</div>';
+    html += '<div class="v2-money-grid">';
+    html += '<div class="v2-money-item v2-money-green"><div class="v2-money-value">—</div><div class="v2-money-label">This month</div></div>';
+    html += '<div class="v2-money-item v2-money-red"><div class="v2-money-value">—</div><div class="v2-money-label">Overdue</div></div>';
+    html += '<div class="v2-money-item v2-money-grey"><div class="v2-money-value">—</div><div class="v2-money-label">Pipeline</div></div>';
+    html += '</div>';
+    html += '<div class="v2-money-note">Connect financial data to populate</div>';
+    html += '</div>';
+
+    // Quick stats strip
+    html += '<div class="v2-stats-strip">';
+    html += '<div class="v2-stat"><span class="v2-stat-value">' + totalCards + '</span><span class="v2-stat-label">Total items</span></div>';
+    html += '<div class="v2-stat"><span class="v2-stat-value">' + doneCards + '</span><span class="v2-stat-label">Done</span></div>';
+    html += '<div class="v2-stat"><span class="v2-stat-value">' + incCount + '</span><span class="v2-stat-label">Ideas</span></div>';
+    html += '<div class="v2-stat"><span class="v2-stat-value">' + config.dashboards.length + '</span><span class="v2-stat-label">Dashboards</span></div>';
+    html += '</div>';
+
+    // Recently completed (collapsed by default)
     if (recentDone.length > 0) {
-      html += '<div class="panel">';
-      html += '<div class="panel-header"><span class="panel-title">✅ Recently Completed</span></div>';
-      html += '<div class="panel-body no-pad">';
-      recentDone.forEach(function (c) { html += taskItem(c); });
+      html += '<div class="v2-section v2-done">';
+      html += '<div class="v2-section-header v2-collapsible" data-target="recentDone">';
+      html += '<span class="v2-section-icon">✅</span>';
+      html += '<span class="v2-section-title">Recently Completed</span>';
+      html += '<span class="v2-chevron">▸</span>';
+      html += '</div>';
+      html += '<div class="v2-items v2-collapsed" id="recentDone">';
+      recentDone.forEach(function (c) {
+        html += '<div class="v2-item">';
+        html += '<span class="v2-item-icon">✓</span>';
+        html += '<div class="v2-item-body">';
+        html += '<div class="v2-item-title">' + esc(c.title) + '</div>';
+        html += '<div class="v2-item-meta">' + (c._sourceEmoji || "") + ' ' + (c._sourceName || "") + '</div>';
+        html += '</div></div>';
+      });
       html += '</div></div>';
     }
 
+    html += '</div>';
     container.innerHTML = html;
 
-    // Wire up incubator link
-    var goBtn = document.getElementById("goToIncubator");
-    if (goBtn) goBtn.addEventListener("click", function () { switchView("incubator"); });
+    // Wire collapsible sections
+    container.querySelectorAll(".v2-collapsible").forEach(function(el) {
+      el.addEventListener("click", function() {
+        var target = document.getElementById(el.getAttribute("data-target"));
+        if (target) {
+          target.classList.toggle("v2-collapsed");
+          el.querySelector(".v2-chevron").textContent = target.classList.contains("v2-collapsed") ? "▸" : "▾";
+        }
+      });
+    });
+  }
+
+  // ── VIEW: 8 Questions ──
+  function renderQuestions(container) {
+    var all = getAllCards();
+    var inProgress = all.filter(function (c) { return c.status === "in-progress"; });
+    var backlog = all.filter(function (c) { return c.status === "backlog"; });
+    var ideas = all.filter(function (c) { return c.status === "ideas"; });
+    var incCount = incubatorData ? incubatorData.ideas.length : 0;
+
+    var questions = [
+      { id: "work", icon: "📋", question: "What am I working on?", 
+        stat: inProgress.length + " active · " + backlog.length + " backlog",
+        color: "var(--cc-primary)" },
+      { id: "money", icon: "💰", question: "How's my money?", 
+        stat: "Connect financial data",
+        color: "var(--cc-green)" },
+      { id: "customers", icon: "👥", question: "Who are my customers?", 
+        stat: "Coming soon",
+        color: "var(--cc-amber)" },
+      { id: "materials", icon: "📦", question: "What do I need?", 
+        stat: "Coming soon",
+        color: "var(--cc-purple)" },
+      { id: "direction", icon: "🧭", question: "Where am I heading?", 
+        stat: config.dashboards.length + " businesses active",
+        color: "var(--cc-primary-dark)" },
+      { id: "people", icon: "🤝", question: "Who's helping?", 
+        stat: "Coming soon",
+        color: "var(--cc-green)" },
+      { id: "waste", icon: "♻️", question: "What am I wasting?", 
+        stat: "Coming soon",
+        color: "var(--cc-red)" },
+      { id: "new", icon: "💡", question: "What's new?", 
+        stat: ideas.length + " ideas · " + incCount + " incubating",
+        color: "var(--cc-purple)" }
+    ];
+
+    var html = '<div class="v2-questions">';
+    html += '<div class="v2-greeting">';
+    html += '<h1>The 8 Questions</h1>';
+    html += '<p class="v2-date">Everything you need to know about your businesses</p>';
+    html += '</div>';
+
+    questions.forEach(function (q) {
+      var hasDetail = (q.id === "work" || q.id === "new" || q.id === "direction");
+      html += '<div class="v2-question-card' + (hasDetail ? ' v2-clickable' : '') + '" data-question="' + q.id + '">';
+      html += '<div class="v2-question-icon" style="background:' + q.color + '">' + q.icon + '</div>';
+      html += '<div class="v2-question-body">';
+      html += '<div class="v2-question-text">' + q.question + '</div>';
+      html += '<div class="v2-question-stat">' + q.stat + '</div>';
+      html += '</div>';
+      if (hasDetail) html += '<div class="v2-question-arrow">›</div>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Wire clickable questions
+    container.querySelectorAll(".v2-clickable").forEach(function(el) {
+      el.addEventListener("click", function() {
+        switchView("q-" + el.getAttribute("data-question"));
+      });
+    });
+  }
+
+  // ── VIEW: Question detail ──
+  function renderQuestionDetail(container, questionId) {
+    var all = getAllCards();
+
+    var html = '<div class="v2-question-detail">';
+    html += '<div class="v2-back" id="qBack">← Back to Questions</div>';
+
+    if (questionId === "work") {
+      var inProgress = all.filter(function (c) { return c.status === "in-progress"; });
+      var backlog = all.filter(function (c) { return c.status === "backlog"; });
+      var doneRecent = all.filter(function (c) { return c.status === "done" && c.completedAt; })
+        .sort(function (a, b) { return b.completedAt.localeCompare(a.completedAt); }).slice(0, 5);
+
+      html += '<div class="v2-greeting"><h1>📋 What am I working on?</h1></div>';
+
+      // Mini kanban
+      html += '<div class="v2-mini-kanban">';
+      html += '<div class="v2-kanban-col"><div class="v2-kanban-header v2-kanban-doing">Doing · ' + inProgress.length + '</div>';
+      inProgress.slice(0, 10).forEach(function(c) {
+        html += '<div class="v2-kanban-card">' + (c._sourceEmoji || "") + ' ' + esc(c.title) + '</div>';
+      });
+      html += '</div>';
+      html += '<div class="v2-kanban-col"><div class="v2-kanban-header v2-kanban-next">Next Up · ' + Math.min(backlog.length, 10) + '</div>';
+      backlog.filter(function(c) { return c.priority === "high"; }).slice(0, 5).forEach(function(c) {
+        html += '<div class="v2-kanban-card">' + (c._sourceEmoji || "") + ' ' + esc(c.title) + '</div>';
+      });
+      html += '</div>';
+      html += '<div class="v2-kanban-col"><div class="v2-kanban-header v2-kanban-done">Done · ' + doneRecent.length + '</div>';
+      doneRecent.forEach(function(c) {
+        html += '<div class="v2-kanban-card v2-done-card">' + (c._sourceEmoji || "") + ' ' + esc(c.title) + '</div>';
+      });
+      html += '</div>';
+      html += '</div>';
+
+      // By business
+      html += '<div class="v2-section"><div class="v2-section-header"><span class="v2-section-title">By Business</span></div>';
+      config.dashboards.forEach(function(dash) {
+        var cards = (dashboardData[dash.id] || {}).cards || [];
+        var active = cards.filter(function(c) { return c.status === "in-progress"; }).length;
+        var bl = cards.filter(function(c) { return c.status === "backlog"; }).length;
+        var dn = cards.filter(function(c) { return c.status === "done"; }).length;
+        if (cards.length === 0) return;
+        html += '<div class="v2-biz-row">';
+        html += '<span class="v2-biz-name">' + dash.emoji + ' ' + esc(dash.name) + '</span>';
+        html += '<span class="v2-biz-stats">' + active + ' active · ' + bl + ' backlog · ' + dn + ' done</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+    } else if (questionId === "new") {
+      var ideas = all.filter(function (c) { return c.status === "ideas"; });
+      var incIdeas = incubatorData ? incubatorData.ideas : [];
+
+      html += '<div class="v2-greeting"><h1>💡 What\'s new?</h1></div>';
+
+      if (incIdeas.length > 0) {
+        html += '<div class="v2-section"><div class="v2-section-header"><span class="v2-section-title">🧪 Incubator</span><span class="v2-section-count">' + incIdeas.length + '</span></div>';
+        html += '<div class="v2-items">';
+        incIdeas.forEach(function(idea) {
+          var stageEmoji = { concept: "💭", developing: "🔬", ready: "🚀" };
+          html += '<div class="v2-item">';
+          html += '<span class="v2-item-icon">' + (stageEmoji[idea.stage] || "💭") + '</span>';
+          html += '<div class="v2-item-body">';
+          html += '<div class="v2-item-title">' + esc(idea.title) + '</div>';
+          html += '<div class="v2-item-meta">' + (idea.stage || "concept") + '</div>';
+          html += '</div></div>';
+        });
+        html += '</div></div>';
+      }
+
+      if (ideas.length > 0) {
+        html += '<div class="v2-section"><div class="v2-section-header"><span class="v2-section-title">💡 Ideas from Dashboards</span><span class="v2-section-count">' + ideas.length + '</span></div>';
+        html += '<div class="v2-items">';
+        ideas.slice(0, 15).forEach(function(c) {
+          html += '<div class="v2-item">';
+          html += '<span class="v2-item-icon">' + (c._sourceEmoji || "💡") + '</span>';
+          html += '<div class="v2-item-body">';
+          html += '<div class="v2-item-title">' + esc(c.title) + '</div>';
+          html += '<div class="v2-item-meta">' + (c._sourceName || "") + '</div>';
+          html += '</div></div>';
+        });
+        html += '</div></div>';
+      }
+
+    } else if (questionId === "direction") {
+      html += '<div class="v2-greeting"><h1>🧭 Where am I heading?</h1></div>';
+      html += '<div class="v2-section">';
+      config.dashboards.forEach(function(dash) {
+        var data = dashboardData[dash.id] || { cards: [] };
+        var cards = data.cards || [];
+        var total = cards.length;
+        var done = cards.filter(function(c) { return c.status === "done"; }).length;
+        var pct = total ? Math.round((done / total) * 100) : 0;
+
+        html += '<div class="v2-direction-card">';
+        html += '<div class="v2-direction-header">' + dash.emoji + ' ' + esc(dash.name) + '</div>';
+        html += '<div class="v2-direction-desc">' + esc(dash.description) + '</div>';
+        html += '<div class="v2-progress-bar"><div class="v2-progress-fill" style="width:' + pct + '%"></div></div>';
+        html += '<div class="v2-direction-stats">' + done + '/' + total + ' complete (' + pct + '%)</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    var backBtn = document.getElementById("qBack");
+    if (backBtn) backBtn.addEventListener("click", function() { switchView("questions"); });
+  }
+
+  // ── Mobile bottom nav ──
+  function buildMobileNav() {
+    if (document.getElementById("mobileBottomNav")) return;
+    if (!config || !config.mobileNav) return;
+
+    var nav = document.createElement("nav");
+    nav.id = "mobileBottomNav";
+    nav.className = "v2-bottom-nav";
+
+    var html = '';
+    config.mobileNav.forEach(function(item) {
+      html += '<div class="v2-bnav-item" data-view="' + item.id + '">';
+      html += '<span class="v2-bnav-icon">' + item.icon + '</span>';
+      html += '<span class="v2-bnav-label">' + item.label + '</span>';
+      html += '</div>';
+    });
+    nav.innerHTML = html;
+    document.body.appendChild(nav);
+
+    nav.querySelectorAll(".v2-bnav-item").forEach(function(el) {
+      el.addEventListener("click", function() {
+        var view = el.getAttribute("data-view");
+        if (view === "businesses") {
+          // "More" button toggles sidebar on mobile
+          toggleMobileSidebar();
+        } else {
+          switchView(view);
+          closeMobileSidebar();
+        }
+      });
+    });
+  }
+
+  function updateMobileNav(viewName) {
+    var nav = document.getElementById("mobileBottomNav");
+    if (!nav) return;
+    nav.querySelectorAll(".v2-bnav-item").forEach(function(el) {
+      el.classList.toggle("active", el.getAttribute("data-view") === viewName);
+    });
   }
 
   // ── VIEW: Businesses ──
