@@ -1,9 +1,14 @@
 /* ============================================================
    Solution Planner — app.js
    
+   Businesses are solutions to problems. This tool structures 
+   the plan to solve them.
+   
    Architecture:
-   - VIEWER: Fetches & displays data from project dashboards
-   - INCUBATOR: Hosts embryonic ideas locally until they graduate
+   - TODAY: What needs attention right now
+   - 8 QUESTIONS: Everything you need to know about your businesses
+   - JAMES: AI partner status and our story
+   - INCUBATOR: Ideas not yet graduated to their own dashboard
    
    Data lives with the project. The planner is a lens, not a notebook.
    ============================================================ */
