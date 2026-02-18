@@ -68,19 +68,27 @@
   // ─── Update sidebar links from config.json ───
   function updateSidebarFromConfig() {
     if (!state.configData || !state.configData.dashboards) return;
-    // Update external link URLs from config dashboard data
-    const dashMap = {};
-    state.configData.dashboards.forEach(d => { dashMap[d.id] = d; });
 
-    // Update sidebar external links if config has URLs
+    // Build map of boardUrl path → dashboard for exact matching
+    const pathMap = {};
+    state.configData.dashboards.forEach(d => {
+      if (d.boardUrl) {
+        try {
+          const path = new URL(d.boardUrl).pathname.replace(/\/$/, '');
+          pathMap[path] = d;
+        } catch(e) {}
+      }
+    });
+
+    // Update sidebar external links — match by pathname (not hostname, which is shared)
     document.querySelectorAll('.sidebar-nav a.nav-link').forEach(link => {
       const href = link.getAttribute('href') || '';
-      // Try to match by URL
-      state.configData.dashboards.forEach(d => {
-        if (d.boardUrl && href.includes(d.boardUrl.replace('https://', '').split('/')[0])) {
-          link.setAttribute('href', d.boardUrl);
+      try {
+        const linkPath = new URL(href).pathname.replace(/\/$/, '');
+        if (pathMap[linkPath]) {
+          link.setAttribute('href', pathMap[linkPath].boardUrl);
         }
-      });
+      } catch(e) {}
     });
   }
 
