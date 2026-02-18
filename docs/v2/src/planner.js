@@ -795,6 +795,10 @@
     const id = cards.filter(c => c.status === 'ideas').length;
 
     document.getElementById('shedDetail').innerHTML = `
+      <div class="detail-links">
+        <a href="https://andrewsgparsons-source.github.io/shed-project-board/" target="_blank" class="detail-dash-link">📋 Open Project Board →</a>
+        <a href="https://andrewsgparsons-source.github.io/Parametric-shed2-staging/" target="_blank" class="detail-dash-link">🔧 Open Configurator →</a>
+      </div>
       <div class="detail-card">
         <h3>Configurator Development</h3>
         <div class="detail-stat-row">
@@ -876,6 +880,9 @@
     const topInc = Object.entries(incByCat).sort((a,b) => b[1] - a[1]);
 
     document.getElementById('farmDetail').innerHTML = `
+      <div class="detail-links">
+        <a href="https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/" target="_blank" class="detail-dash-link">🌾 Open Farm Dashboard →</a>
+      </div>
       <div class="detail-card">
         <h3>Financial Summary (3 Fiscal Years)</h3>
         <div class="detail-stat-row">
@@ -931,6 +938,9 @@
     const ideas = cards.filter(c => c.status === 'ideas').length;
 
     document.getElementById('forgeDetail').innerHTML = `
+      <div class="detail-links">
+        <a href="https://andrewsgparsons-source.github.io/forge-ai/dashboard/" target="_blank" class="detail-dash-link">☕ Open Forge AI Dashboard →</a>
+      </div>
       <div class="detail-card">
         <h3>Task Status</h3>
         <div class="detail-stat-row">
@@ -1191,6 +1201,9 @@
   // ─── Render: Grow Detail ───
   function renderGrowDetail() {
     document.getElementById('growDetail').innerHTML = `
+      <div class="detail-links">
+        <a href="https://andrewsgparsons-source.github.io/GrowCabin/dashboard/" target="_blank" class="detail-dash-link">🌱 Open Grow Cabin Dashboard →</a>
+      </div>
       <div class="detail-card">
         <h3>Stage: Pre-Prototype</h3>
         <div class="james-progress" style="margin:12px 0;">
