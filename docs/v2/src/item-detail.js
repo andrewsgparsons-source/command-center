@@ -71,7 +71,7 @@
             <div class="idp-add-row">
               <label class="idp-upload-btn">
                 📷 Upload Photo
-                <input type="file" accept="image/*" capture="environment" id="idpPhotoInput" style="display:none" onchange="ItemDetail.uploadPhoto(this)" />
+                <input type="file" accept="image/*" id="idpPhotoInput" style="display:none" onchange="ItemDetail.uploadPhoto(this)" />
               </label>
               <span class="idp-upload-hint" id="idpUploadHint">Cloudflare Worker not configured yet</span>
             </div>
