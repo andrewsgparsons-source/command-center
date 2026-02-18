@@ -198,15 +198,15 @@
       `;
     } else {
       document.getElementById('attentionList').innerHTML = items.map(i => `
-        <div class="attention-item" data-id="${i.id}">
+        <div class="attention-item" data-id="${i.id}" onclick="window._openItem('${i.id}')">
           <span class="attention-biz">${i.biz}</span>
           <div class="attention-text">
             <div class="attention-title">${i.title}</div>
             <div class="attention-detail">${i.detail || ''}</div>
           </div>
           <div class="attention-actions">
-            <button class="att-btn att-done" onclick="window._attDone('${i.id}')" title="Mark done">✓</button>
-            <button class="att-btn att-dismiss" onclick="window._attDismiss('${i.id}')" title="Dismiss">✕</button>
+            <button class="att-btn att-done" onclick="event.stopPropagation(); window._attDone('${i.id}')" title="Mark done">✓</button>
+            <button class="att-btn att-dismiss" onclick="event.stopPropagation(); window._attDismiss('${i.id}')" title="Dismiss">✕</button>
           </div>
         </div>
       `).join('');
@@ -258,6 +258,14 @@
 
   window._attDismiss = function(id) {
     FireSync.dismissAttentionItem(id);
+  };
+
+  // Open item detail panel
+  window._openItem = function(id) {
+    const item = fireAttentionItems[id];
+    if (item && window.ItemDetail) {
+      ItemDetail.open(id, item);
+    }
   };
 
   // Add item dialog
