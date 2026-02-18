@@ -9,6 +9,8 @@
     farm:  'https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/data/financial_data.json',
     forge: 'https://raw.githubusercontent.com/andrewsgparsons-source/forge-ai/main/data/cards.json',
     gptChats: '../data/gpt-chats.json',
+    james: '../data/james.json',
+    config: '../data/config.json',
   };
 
   // ─── State ───
@@ -19,6 +21,8 @@
     farmFinancials: null,
     forgeCards: [],
     gptChats: [],
+    jamesData: null,
+    configData: null,
   };
 
   // ─── Init ───
@@ -28,6 +32,8 @@
     setupMobileMenu();
     setupBusinessFilter();
     await loadAllData();
+    buildMobileBottomNav();
+    updateSidebarFromConfig();
     switchView(state.currentView);
     document.getElementById('loadingScreen').style.display = 'none';
 
@@ -59,6 +65,25 @@
     });
   }
 
+  // ─── Update sidebar links from config.json ───
+  function updateSidebarFromConfig() {
+    if (!state.configData || !state.configData.dashboards) return;
+    // Update external link URLs from config dashboard data
+    const dashMap = {};
+    state.configData.dashboards.forEach(d => { dashMap[d.id] = d; });
+
+    // Update sidebar external links if config has URLs
+    document.querySelectorAll('.sidebar-nav a.nav-link').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      // Try to match by URL
+      state.configData.dashboards.forEach(d => {
+        if (d.boardUrl && href.includes(d.boardUrl.replace('https://', '').split('/')[0])) {
+          link.setAttribute('href', d.boardUrl);
+        }
+      });
+    });
+  }
+
   function switchView(viewId) {
     state.currentView = viewId;
     localStorage.setItem('sp2-view', viewId);
@@ -75,6 +100,9 @@
       viewEl.style.display = 'block';
       renderView(viewId);
     }
+
+    // Update mobile bottom nav active state
+    updateMobileBottomNav(viewId);
 
     // Scroll to top
     window.scrollTo(0, 0);
@@ -133,6 +161,8 @@
       fetch(DATA_URLS.farm).then(r => r.json()),
       fetch(DATA_URLS.forge).then(r => r.json()),
       fetch(DATA_URLS.gptChats).then(r => r.json()),
+      fetch(DATA_URLS.james).then(r => r.json()),
+      fetch(DATA_URLS.config).then(r => r.json()),
     ]);
 
     if (results[0].status === 'fulfilled') {
@@ -148,6 +178,12 @@
     }
     if (results[3].status === 'fulfilled') {
       state.gptChats = results[3].value || [];
+    }
+    if (results[4].status === 'fulfilled') {
+      state.jamesData = results[4].value;
+    }
+    if (results[5].status === 'fulfilled') {
+      state.configData = results[5].value;
     }
 
     // Update sidebar badges
@@ -320,6 +356,9 @@
 
     // Businesses
     renderBusinessCards(f);
+
+    // Quick Stats Strip (after business cards)
+    renderStatsStrip();
   }
 
   function renderMoney(f) {
@@ -420,32 +459,199 @@
     const fDN = state.forgeCards.filter(c => c.status === 'done').length;
 
     const questions = [
-      { emoji: '📋', title: 'What am I working on?', summary: `${sIP+fIP} active · ${sBL} queued · ${sDN+fDN} done`, status: 'live', label: 'Live data' },
-      { emoji: '💰', title: "How's my money?", summary: state.farmFinancials ? 'Farm data available · Sheds coming soon' : 'Coming soon on update', status: state.farmFinancials ? 'partial' : 'coming', label: state.farmFinancials ? 'Partial' : 'Coming soon' },
-      { emoji: '👥', title: 'Who are my customers?', summary: 'Coming soon on update', status: 'coming', label: 'Coming soon' },
-      { emoji: '📦', title: 'What do I need?', summary: 'Coming soon on update', status: 'coming', label: 'Coming soon' },
-      { emoji: '🧭', title: 'Where am I heading?', summary: '4 strategies defined · OKRs coming soon', status: 'partial', label: 'Partial' },
-      { emoji: '🤝', title: "Who's helping?", summary: 'Coming soon on update', status: 'coming', label: 'Coming soon' },
-      { emoji: '♻️', title: 'What am I wasting?', summary: state.farmFinancials ? 'Farm contractor analysis available' : 'Coming soon on update', status: state.farmFinancials ? 'partial' : 'coming', label: state.farmFinancials ? 'Partial' : 'Coming soon' },
-      { emoji: '💡', title: "What's new?", summary: `${state.shedCards.filter(c => c.status === 'ideas').length} shed ideas · Incubator active`, status: 'live', label: 'Live data' },
+      { id: 'work', emoji: '📋', title: 'What am I working on?', summary: `${sIP+fIP} active · ${sBL} queued · ${sDN+fDN} done`, status: 'live', label: 'Live data', clickable: true },
+      { id: 'money', emoji: '💰', title: "How's my money?", summary: state.farmFinancials ? 'Farm data available · Sheds coming soon' : 'Coming soon on update', status: state.farmFinancials ? 'partial' : 'coming', label: state.farmFinancials ? 'Partial' : 'Coming soon', clickable: false },
+      { id: 'customers', emoji: '👥', title: 'Who are my customers?', summary: 'Coming soon on update', status: 'coming', label: 'Coming soon', clickable: false },
+      { id: 'materials', emoji: '📦', title: 'What do I need?', summary: 'Coming soon on update', status: 'coming', label: 'Coming soon', clickable: false },
+      { id: 'direction', emoji: '🧭', title: 'Where am I heading?', summary: '4 strategies defined · OKRs coming soon', status: 'partial', label: 'Partial', clickable: true },
+      { id: 'people', emoji: '🤝', title: "Who's helping?", summary: 'Coming soon on update', status: 'coming', label: 'Coming soon', clickable: false },
+      { id: 'waste', emoji: '♻️', title: 'What am I wasting?', summary: state.farmFinancials ? 'Farm contractor analysis available' : 'Coming soon on update', status: state.farmFinancials ? 'partial' : 'coming', label: state.farmFinancials ? 'Partial' : 'Coming soon', clickable: false },
+      { id: 'new', emoji: '💡', title: "What's new?", summary: `${state.shedCards.filter(c => c.status === 'ideas').length} shed ideas · Incubator active`, status: 'live', label: 'Live data', clickable: false },
     ];
 
     container.innerHTML = questions.map(q => `
-      <div class="question-card">
+      <div class="question-card${q.clickable ? ' question-clickable' : ''}" ${q.clickable ? `data-question="${q.id}"` : ''}>
         <span class="question-emoji">${q.emoji}</span>
         <div class="question-content">
           <div class="question-title">${q.title}</div>
           <div class="question-summary">${q.summary}</div>
         </div>
         <span class="question-badge ${q.status}">${q.label}</span>
-        <span class="question-arrow">›</span>
+        ${q.clickable ? '<span class="question-arrow">›</span>' : ''}
       </div>
     `).join('');
+
+    // Wire up clickable questions
+    container.querySelectorAll('.question-clickable').forEach(card => {
+      card.addEventListener('click', () => {
+        const qId = card.dataset.question;
+        renderQuestionDetailInline(qId);
+      });
+    });
+  }
+
+  // ─── Question Detail (rendered inline in the questions view) ───
+  function renderQuestionDetailInline(questionId) {
+    const container = document.getElementById('questionCards');
+    let html = '<div class="question-detail-back" id="qDetailBack">← Back to Questions</div>';
+
+    if (questionId === 'work') {
+      // Combine all cards
+      const allCards = [];
+      state.shedCards.forEach(c => allCards.push({...c, _emoji: '🏠', _name: 'Garden Buildings'}));
+      state.forgeCards.forEach(c => allCards.push({...c, _emoji: '☕', _name: 'Forge AI'}));
+
+      const doing = allCards.filter(c => c.status === 'in-progress');
+      const backlog = allCards.filter(c => c.status === 'backlog');
+      const highBacklog = backlog.filter(c => c.priority === 'high');
+      const doneRecent = allCards.filter(c => c.status === 'done' && c.completedAt)
+        .sort((a, b) => (b.completedAt || '').localeCompare(a.completedAt || ''))
+        .slice(0, 5);
+
+      html += '<h2 class="question-detail-title">📋 What am I working on?</h2>';
+
+      // Mini Kanban
+      html += '<div class="mini-kanban">';
+      html += `<div class="kanban-col"><div class="kanban-header kanban-doing">Doing · ${doing.length}</div>`;
+      doing.slice(0, 10).forEach(c => {
+        html += `<div class="kanban-card">${c._emoji} ${escapeHtml(c.title)}</div>`;
+      });
+      html += '</div>';
+
+      html += `<div class="kanban-col"><div class="kanban-header kanban-next">Next Up · ${highBacklog.length}</div>`;
+      highBacklog.slice(0, 5).forEach(c => {
+        html += `<div class="kanban-card">${c._emoji} ${escapeHtml(c.title)}</div>`;
+      });
+      html += '</div>';
+
+      html += `<div class="kanban-col"><div class="kanban-header kanban-done">Done · ${doneRecent.length}</div>`;
+      doneRecent.forEach(c => {
+        html += `<div class="kanban-card kanban-done-card">${c._emoji} ${escapeHtml(c.title)}</div>`;
+      });
+      html += '</div>';
+      html += '</div>';
+
+      // By business breakdown
+      html += '<div class="detail-card" style="margin-top:16px;"><h3>By Business</h3>';
+      const sources = [
+        { emoji: '🏠', name: 'Garden Buildings', cards: state.shedCards },
+        { emoji: '☕', name: 'Forge AI', cards: state.forgeCards },
+      ];
+      sources.forEach(src => {
+        if (!src.cards.length) return;
+        const active = src.cards.filter(c => c.status === 'in-progress').length;
+        const bl = src.cards.filter(c => c.status === 'backlog').length;
+        const dn = src.cards.filter(c => c.status === 'done').length;
+        html += `<div class="biz-breakdown-row">
+          <span class="biz-breakdown-name">${src.emoji} ${escapeHtml(src.name)}</span>
+          <span class="biz-breakdown-stats">${active} active · ${bl} backlog · ${dn} done</span>
+        </div>`;
+      });
+      html += '</div>';
+
+    } else if (questionId === 'direction') {
+      html += '<h2 class="question-detail-title">🧭 Where am I heading?</h2>';
+
+      const businesses = [
+        { emoji: '🏠', name: 'Garden Buildings', desc: 'Bespoke timber-framed garden buildings', cards: state.shedCards },
+        { emoji: '☕', name: 'Forge AI', desc: 'AI transition coaching & retreats', cards: state.forgeCards },
+      ];
+
+      // Add farm if financials loaded (treat it as having some progress)
+      if (state.farmFinancials) {
+        businesses.push({ emoji: '🌾', name: 'Whelpley Farm', desc: 'Family partnership — crops, livery, holiday let', cards: [], progress: 60 });
+      }
+      businesses.push({ emoji: '🌱', name: 'Grow Cabin', desc: 'Controlled-environment home growing system', cards: [], progress: 15 });
+
+      html += '<div class="direction-cards">';
+      businesses.forEach(biz => {
+        const total = biz.cards.length;
+        const done = biz.cards.filter(c => c.status === 'done').length;
+        const pct = biz.progress !== undefined ? biz.progress : (total ? Math.round((done / total) * 100) : 0);
+
+        html += `<div class="direction-card">
+          <div class="direction-header">${biz.emoji} ${escapeHtml(biz.name)}</div>
+          <div class="direction-desc">${escapeHtml(biz.desc)}</div>
+          <div class="progress-bar" style="height:8px; margin:8px 0;">
+            <div class="progress-fill" style="width:${pct}%; background:linear-gradient(90deg, var(--accent), var(--accent-light));"></div>
+          </div>
+          <div class="direction-stats">${biz.progress !== undefined ? pct + '% estimated progress' : done + '/' + total + ' complete (' + pct + '%)'}</div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+
+    // Wire back button
+    const backBtn = document.getElementById('qDetailBack');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => renderQuestions());
+    }
   }
 
   // ─── Render: James Detail ───
   function renderJamesDetail() {
-    document.getElementById('jamesDetail').innerHTML = `
+    const j = state.jamesData;
+    let html = '';
+
+    // ── Restored V1 content: Identity, Working Patterns, Capabilities, Our Story ──
+    if (j) {
+      // Identity info
+      html += `
+        <div class="detail-card">
+          <h3>Identity</h3>
+          <div class="james-identity-grid">
+            <div class="james-identity-item"><span class="james-id-label">Name</span><span class="james-id-value">${j.identity.emoji || '🤖'} ${escapeHtml(j.identity.name)}</span></div>
+            <div class="james-identity-item"><span class="james-id-label">Born</span><span class="james-id-value">${escapeHtml(j.identity.created)}</span></div>
+            <div class="james-identity-item"><span class="james-id-label">Creator</span><span class="james-id-value">${escapeHtml(j.identity.creator)}</span></div>
+            <div class="james-identity-item"><span class="james-id-label">Platform</span><span class="james-id-value">${escapeHtml(j.identity.platform)}</span></div>
+          </div>
+        </div>
+      `;
+
+      // Working Patterns
+      if (j.workingPatterns) {
+        html += `<div class="detail-card"><h3>How We Work</h3><div class="working-patterns-list">`;
+        Object.keys(j.workingPatterns).forEach(key => {
+          const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+          html += `
+            <div class="working-pattern-item">
+              <div class="wp-label">${escapeHtml(label)}</div>
+              <div class="wp-value">${escapeHtml(j.workingPatterns[key])}</div>
+            </div>
+          `;
+        });
+        html += `</div></div>`;
+      }
+
+      // Capabilities tag grid
+      if (j.capabilities && j.capabilities.length) {
+        html += `<div class="detail-card"><h3>Capabilities</h3><div class="tag-grid">`;
+        j.capabilities.forEach(cap => {
+          html += `<div class="tag">${escapeHtml(cap)}</div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      // Our Story timeline
+      if (j.story && j.story.length) {
+        html += `<div class="detail-card"><h3>Our Story</h3><ul class="timeline">`;
+        j.story.slice().reverse().forEach(event => {
+          html += `
+            <li class="timeline-item">
+              <div class="timeline-date">${escapeHtml(event.date)}</div>
+              <div class="timeline-event-title">${escapeHtml(event.title)}</div>
+              <div class="timeline-desc">${escapeHtml(event.description)}</div>
+            </li>
+          `;
+        });
+        html += `</ul></div>`;
+      }
+    }
+
+    // ── Existing V2 content (preserved) ──
+    html += `
       <div class="detail-card">
         <h3>Current Sprint</h3>
         <div class="james-task" style="font-size:16px; margin-bottom:12px;">Business OS — Dashboard Enhancement Sprint</div>
@@ -513,6 +719,8 @@
         </div>
       </div>
     `;
+
+    document.getElementById('jamesDetail').innerHTML = html;
   }
 
   // ─── Render: GPT Chats ───
@@ -552,11 +760,11 @@
             </div>` : ''}
             <div class="gpt-section">
               <h3>📤 Prompt Sent to ChatGPT</h3>
-              <div class="gpt-text-block gpt-prompt">${escapeHtml(chat.prompt)}</div>
+              <div class="gpt-text-block gpt-prompt">${escapeHtml(chat.prompt, true)}</div>
             </div>
             <div class="gpt-section">
               <h3>📥 ChatGPT Response</h3>
-              <div class="gpt-text-block gpt-response">${escapeHtml(chat.response)}</div>
+              <div class="gpt-text-block gpt-response">${escapeHtml(chat.response, true)}</div>
             </div>
           </div>
         </div>
@@ -564,10 +772,11 @@
     }).join('');
   }
 
-  function escapeHtml(text) {
+  function escapeHtml(text, preserveNewlines) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML.replace(/\n/g, '<br>');
+    return preserveNewlines ? div.innerHTML.replace(/\n/g, '<br>') : div.innerHTML;
   }
 
   // ─── Render: Shed Detail ───
@@ -741,6 +950,92 @@
         </div>
       </div>
     `;
+  }
+
+  // ─── Quick Stats Strip ───
+  function renderStatsStrip() {
+    // Remove existing strip if any
+    let existing = document.getElementById('quickStatsStrip');
+    if (existing) existing.remove();
+
+    // Calculate stats
+    const totalItems = state.shedCards.length + state.forgeCards.length;
+    const doneItems = state.shedCards.filter(c => c.status === 'done').length + state.forgeCards.filter(c => c.status === 'done').length;
+    const ideaItems = state.shedCards.filter(c => c.status === 'ideas').length + state.forgeCards.filter(c => c.status === 'ideas').length;
+    const dashCount = state.configData ? state.configData.dashboards.length : 4;
+
+    const strip = document.createElement('div');
+    strip.id = 'quickStatsStrip';
+    strip.className = 'quick-stats-strip';
+    strip.innerHTML = `
+      <div class="qs-stat"><span class="qs-value">${totalItems}</span><span class="qs-label">Total items</span></div>
+      <div class="qs-stat"><span class="qs-value">${doneItems}</span><span class="qs-label">Done</span></div>
+      <div class="qs-stat"><span class="qs-value">${ideaItems}</span><span class="qs-label">Ideas</span></div>
+      <div class="qs-stat"><span class="qs-value">${dashCount}</span><span class="qs-label">Dashboards</span></div>
+    `;
+
+    // Insert after the business cards section
+    const bizSection = document.querySelector('.today-businesses');
+    if (bizSection) {
+      bizSection.after(strip);
+    }
+  }
+
+  // ─── Mobile Bottom Navigation ───
+  function buildMobileBottomNav() {
+    if (document.getElementById('mobileBottomNav')) return;
+
+    // Use config.json mobileNav if available, otherwise defaults
+    const navItems = (state.configData && state.configData.mobileNav) ? state.configData.mobileNav : [
+      { id: 'today', label: 'Today', icon: '🎯' },
+      { id: 'questions', label: 'Questions', icon: '❓' },
+      { id: 'james', label: 'James', icon: '🤖' },
+      { id: 'businesses', label: 'More', icon: '☰' },
+    ];
+
+    const nav = document.createElement('nav');
+    nav.id = 'mobileBottomNav';
+    nav.className = 'v2-bottom-nav';
+
+    nav.innerHTML = navItems.map(item => `
+      <div class="v2-bnav-item" data-view="${item.id}">
+        <span class="v2-bnav-icon">${item.icon}</span>
+        <span class="v2-bnav-label">${item.label}</span>
+      </div>
+    `).join('');
+
+    document.body.appendChild(nav);
+
+    // Wire click handlers
+    nav.querySelectorAll('.v2-bnav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const view = el.dataset.view;
+        if (view === 'businesses') {
+          // "More" button toggles sidebar on mobile
+          const sidebar = document.getElementById('sidebar');
+          const overlay = document.querySelector('.sidebar-overlay');
+          sidebar.classList.toggle('open');
+          if (overlay) overlay.classList.toggle('active');
+        } else {
+          switchView(view);
+          // Close sidebar if open
+          document.getElementById('sidebar').classList.remove('open');
+          const overlay = document.querySelector('.sidebar-overlay');
+          if (overlay) overlay.classList.remove('active');
+        }
+      });
+    });
+
+    // Set initial active state
+    updateMobileBottomNav(state.currentView);
+  }
+
+  function updateMobileBottomNav(viewId) {
+    const nav = document.getElementById('mobileBottomNav');
+    if (!nav) return;
+    nav.querySelectorAll('.v2-bnav-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.view === viewId);
+    });
   }
 
   // ─── Render: Grow Detail ───
