@@ -508,3 +508,81 @@
   appearance: auto;
   min-width: 200px;
 }
+
+/* ─── Edit hint ─── */
+.idp-edit-hint {
+  padding: 0 20px 8px;
+  font-size: 11px;
+  color: var(--text-muted, #A8A29E);
+  font-style: italic;
+}
+
+/* ─── Editable fields ─── */
+.idp-title {
+  cursor: pointer;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s;
+}
+.idp-title:hover {
+  border-bottom-color: var(--accent, #B45309);
+}
+
+.idp-detail {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.idp-detail:hover {
+  background: var(--surface-alt, #F5F0EB);
+}
+
+.idp-edit-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--accent, #B45309);
+  border-radius: 8px;
+  font-size: inherit;
+  font-family: inherit;
+  background: var(--surface, #FFFFFF);
+  color: var(--text, #1C1917);
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.idp-edit-input:focus {
+  outline: none;
+}
+
+/* ─── Priority badge ─── */
+.idp-priority {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: all 0.15s;
+}
+
+.idp-priority.priority-high {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.idp-priority.priority-medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.idp-priority.priority-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.idp-priority:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}

@@ -25,13 +25,15 @@
         <div class="idp-header">
           <div class="idp-header-left">
             <span class="idp-biz" id="idpBiz"></span>
-            <h2 class="idp-title" id="idpTitle"></h2>
+            <h2 class="idp-title" id="idpTitle" onclick="ItemDetail.editField('title')"></h2>
             <span class="idp-status" id="idpStatus"></span>
+            <span class="idp-priority" id="idpPriority" onclick="ItemDetail.cyclePriority()"></span>
           </div>
           <button class="idp-close" onclick="ItemDetail.close()">✕</button>
         </div>
 
-        <div class="idp-detail" id="idpDetail"></div>
+        <div class="idp-detail" id="idpDetail" onclick="ItemDetail.editField('detail')"></div>
+        <div class="idp-edit-hint">Tap title or description to edit</div>
 
         <!-- Tabs -->
         <div class="idp-tabs">
@@ -113,6 +115,11 @@
     document.getElementById('idpStatus').textContent = item.status || 'active';
     document.getElementById('idpStatus').className = 'idp-status status-' + (item.status || 'active');
     document.getElementById('idpDetail').textContent = item.detail || '';
+
+    // Priority badge
+    const prioEl = document.getElementById('idpPriority');
+    prioEl.textContent = item.priority || 'medium';
+    prioEl.className = 'idp-priority priority-' + (item.priority || 'medium');
 
     // Show/hide action buttons based on status
     const doneBtn = document.getElementById('idpDoneBtn');
@@ -426,6 +433,59 @@
     });
   }
 
+  // ─── Edit Fields ───
+  function editField(field) {
+    if (!currentItemId || !currentItem) return;
+
+    const el = field === 'title' ? document.getElementById('idpTitle') : document.getElementById('idpDetail');
+    const currentVal = field === 'title' ? (currentItem.title || '') : (currentItem.detail || '');
+
+    // Replace with input
+    const isTitle = field === 'title';
+    const input = document.createElement(isTitle ? 'input' : 'textarea');
+    input.className = 'idp-edit-input';
+    input.value = currentVal;
+    if (!isTitle) input.rows = 3;
+
+    const parent = el.parentNode;
+    parent.replaceChild(input, el);
+    input.focus();
+    input.select();
+
+    function save() {
+      const newVal = input.value.trim();
+      if (newVal && newVal !== currentVal) {
+        const updates = {};
+        updates[field] = newVal;
+        FireSync.updateTask('attention', currentItemId, updates);
+        currentItem[field] = newVal;
+      }
+      parent.replaceChild(el, input);
+      el.textContent = newVal || currentVal;
+    }
+
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && isTitle) { e.preventDefault(); save(); }
+      if (e.key === 'Escape') { parent.replaceChild(el, input); el.textContent = currentVal; }
+    });
+  }
+
+  function cyclePriority() {
+    if (!currentItemId || !currentItem) return;
+    const order = ['high', 'medium', 'low'];
+    const current = currentItem.priority || 'medium';
+    const idx = order.indexOf(current);
+    const next = order[(idx + 1) % order.length];
+
+    FireSync.updateTask('attention', currentItemId, { priority: next });
+    currentItem.priority = next;
+
+    const prioEl = document.getElementById('idpPriority');
+    prioEl.textContent = next;
+    prioEl.className = 'idp-priority priority-' + next;
+  }
+
   // ─── Actions ───
   function markDone() {
     if (!currentItemId) return;
@@ -479,6 +539,8 @@
     navigateToLink,
     markDone,
     dismiss,
+    editField,
+    cyclePriority,
   };
 
 })(window);
