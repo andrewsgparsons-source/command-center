@@ -31,16 +31,9 @@
     switchView(state.currentView);
     document.getElementById('loadingScreen').style.display = 'none';
 
-    // Ask who's using this (first time only)
+    // Solution Planner is Andrew's personal dashboard — no need to ask
     if (window.FireSync) {
-      await FireSync.ensureUser();
-      // Update greeting with name
-      const name = FireSync.getUser();
-      if (name) {
-        const h = new Date().getHours();
-        const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-        document.getElementById('greeting').textContent = g + ', ' + name;
-      }
+      if (!FireSync.getUser()) FireSync.setUser('Andrew');
     }
   });
 
