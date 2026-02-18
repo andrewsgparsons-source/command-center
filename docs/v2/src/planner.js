@@ -181,6 +181,9 @@
     }
     if (results[4].status === 'fulfilled') {
       state.jamesData = results[4].value;
+      console.log('[Planner] james.json loaded:', Object.keys(state.jamesData || {}));
+    } else {
+      console.warn('[Planner] james.json FAILED:', results[4].reason);
     }
     if (results[5].status === 'fulfilled') {
       state.configData = results[5].value;
