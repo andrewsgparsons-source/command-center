@@ -118,6 +118,9 @@
       case 'biz-farm': renderFarmDetail(); break;
       case 'biz-forge': renderForgeDetail(); break;
       case 'biz-grow': renderGrowDetail(); break;
+      case 'businesses': renderBusinessesOverview(); break;
+      case 'personal': renderPersonal(); break;
+      case 'ideas': renderIdeas(); break;
     }
   }
 
@@ -554,14 +557,10 @@
 
       const businesses = [
         { emoji: '🏠', name: 'Garden Buildings', desc: 'Bespoke timber-framed garden buildings', cards: state.shedCards },
+        { emoji: '🌾', name: 'Whelpley Farm', desc: 'Family partnership — crops, livery, holiday let', cards: [], progress: state.farmFinancials ? 60 : 40 },
         { emoji: '☕', name: 'Forge AI', desc: 'AI transition coaching & retreats', cards: state.forgeCards },
+        { emoji: '🌱', name: 'Grow Cabin', desc: 'Controlled-environment home growing system', cards: [], progress: 15 },
       ];
-
-      // Add farm if financials loaded (treat it as having some progress)
-      if (state.farmFinancials) {
-        businesses.push({ emoji: '🌾', name: 'Whelpley Farm', desc: 'Family partnership — crops, livery, holiday let', cards: [], progress: 60 });
-      }
-      businesses.push({ emoji: '🌱', name: 'Grow Cabin', desc: 'Controlled-environment home growing system', cards: [], progress: 15 });
 
       html += '<div class="direction-cards">';
       businesses.forEach(biz => {
@@ -796,6 +795,7 @@
           <div class="detail-stat"><div class="detail-stat-value">${dn}</div><div class="detail-stat-label">Done</div></div>
           <div class="detail-stat"><div class="detail-stat-value">${id}</div><div class="detail-stat-label">Ideas</div></div>
         </div>
+        <div class="build-hash" id="shedBuildHash">🔧 Build: loading...</div>
       </div>
 
       <div class="detail-card">
@@ -831,6 +831,18 @@
         <p style="font-size:13px; color:var(--text-secondary);">Priority: Pricing engine → SEO/marketing → Financial foundation → Scale preparation</p>
       </div>
     `;
+
+    // Fetch build hash
+    fetch('https://andrewsgparsons-source.github.io/Parametric-shed2-staging/build.txt')
+      .then(r => r.ok ? r.text() : Promise.reject('not found'))
+      .then(hash => {
+        const el = document.getElementById('shedBuildHash');
+        if (el) el.textContent = '🔧 Build: ' + hash.trim() + ' · Live';
+      })
+      .catch(() => {
+        const el = document.getElementById('shedBuildHash');
+        if (el) el.textContent = '🔧 Build: unavailable';
+      });
   }
 
   // ─── Render: Farm Detail ───
@@ -1036,6 +1048,136 @@
     nav.querySelectorAll('.v2-bnav-item').forEach(el => {
       el.classList.toggle('active', el.dataset.view === viewId);
     });
+  }
+
+  // ─── Render: Businesses Overview ───
+  function renderBusinessesOverview() {
+    const container = document.getElementById('businessesOverview');
+    const businesses = [
+      {
+        id: 'biz-sheds', emoji: '🏠', name: 'Garden Buildings',
+        desc: 'Bespoke timber-framed garden buildings',
+        cards: state.shedCards,
+        dashUrl: 'https://andrewsgparsons-source.github.io/shed-project-board/'
+      },
+      {
+        id: 'biz-farm', emoji: '🌾', name: 'Whelpley Farm',
+        desc: 'Family partnership — crops, livery, holiday let',
+        cards: [],
+        dashUrl: 'https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/'
+      },
+      {
+        id: 'biz-forge', emoji: '☕', name: 'Forge AI',
+        desc: 'AI transition coaching & retreats',
+        cards: state.forgeCards,
+        dashUrl: 'https://andrewsgparsons-source.github.io/forge-ai/dashboard/'
+      },
+      {
+        id: 'biz-grow', emoji: '🌱', name: 'Grow Cabin',
+        desc: 'Controlled-environment home growing system',
+        cards: [],
+        dashUrl: 'https://andrewsgparsons-source.github.io/GrowCabin/dashboard/'
+      }
+    ];
+
+    // Override URLs from config if available
+    if (state.configData && state.configData.dashboards) {
+      const dashMap = {};
+      state.configData.dashboards.forEach(d => { dashMap[d.id] = d; });
+      if (dashMap['shed'] && dashMap['shed'].boardUrl) businesses[0].dashUrl = dashMap['shed'].boardUrl;
+      if (dashMap['farm'] && dashMap['farm'].boardUrl) businesses[1].dashUrl = dashMap['farm'].boardUrl;
+      if (dashMap['forge'] && dashMap['forge'].boardUrl) businesses[2].dashUrl = dashMap['forge'].boardUrl;
+      if (dashMap['growcabin'] && dashMap['growcabin'].boardUrl) businesses[3].dashUrl = dashMap['growcabin'].boardUrl;
+    }
+
+    container.innerHTML = '<div class="biz-overview-grid">' + businesses.map(biz => {
+      const active = biz.cards.filter(c => c.status === 'in-progress').length;
+      const backlog = biz.cards.filter(c => c.status === 'backlog').length;
+      const done = biz.cards.filter(c => c.status === 'done').length;
+      const total = biz.cards.length;
+
+      return `
+        <div class="biz-overview-card" data-view="${biz.id}">
+          <div class="biz-overview-header">
+            <span class="biz-overview-emoji">${biz.emoji}</span>
+            <span class="biz-overview-name">${escapeHtml(biz.name)}</span>
+          </div>
+          <div class="biz-overview-desc">${escapeHtml(biz.desc)}</div>
+          <div class="biz-overview-stats">
+            ${total > 0 ? `
+              <span class="biz-ov-stat"><strong>${active}</strong> active</span>
+              <span class="biz-ov-stat"><strong>${backlog}</strong> backlog</span>
+              <span class="biz-ov-stat"><strong>${done}</strong> done</span>
+              <span class="biz-ov-stat"><strong>${total}</strong> total</span>
+            ` : '<span class="biz-ov-stat" style="color:var(--text-muted);">No task board data</span>'}
+          </div>
+          <a class="biz-overview-link" href="${biz.dashUrl}" target="_blank" onclick="event.stopPropagation()">Open dashboard →</a>
+        </div>
+      `;
+    }).join('') + '</div>';
+
+    // Click card to switch to business detail
+    container.querySelectorAll('.biz-overview-card').forEach(card => {
+      card.addEventListener('click', () => switchView(card.dataset.view));
+    });
+  }
+
+  // ─── Render: Personal (placeholder) ───
+  function renderPersonal() {
+    document.getElementById('personalDetail').innerHTML = `
+      <div class="detail-card" style="text-align:center; padding:48px 24px;">
+        <div style="font-size:48px; margin-bottom:16px;">👤</div>
+        <h3 style="font-family:var(--font-heading); font-size:20px; margin-bottom:8px;">Your personal space</h3>
+        <p style="color:var(--text-muted); font-size:14px; max-width:400px; margin:0 auto;">Life admin, health, goals, habits — everything that's just for you. Coming soon!</p>
+      </div>
+    `;
+  }
+
+  // ─── Render: Ideas ───
+  function renderIdeas() {
+    const container = document.getElementById('ideasDetail');
+
+    // Gather ideas from all card sources
+    const sources = [
+      { emoji: '🏠', name: 'Garden Buildings', cards: state.shedCards },
+      { emoji: '☕', name: 'Forge AI', cards: state.forgeCards },
+    ];
+
+    let hasIdeas = false;
+    let html = '';
+
+    sources.forEach(src => {
+      const ideas = src.cards.filter(c => c.status === 'ideas');
+      if (!ideas.length) return;
+      hasIdeas = true;
+
+      html += `<div class="detail-card">
+        <h3>${src.emoji} ${escapeHtml(src.name)}</h3>
+        <div class="ideas-list">`;
+
+      ideas.forEach(idea => {
+        const prClass = idea.priority === 'high' ? 'priority-high' : idea.priority === 'low' ? 'priority-low' : 'priority-medium';
+        html += `
+          <div class="idea-item">
+            <span class="idea-title">${escapeHtml(idea.title)}</span>
+            <span class="attention-priority ${prClass}">${idea.priority || 'medium'}</span>
+          </div>`;
+      });
+
+      html += '</div></div>';
+    });
+
+    if (!hasIdeas) {
+      html = `
+        <div class="detail-card" style="text-align:center; padding:48px 24px;">
+          <div style="font-size:48px; margin-bottom:16px;">💡</div>
+          <h3 style="font-family:var(--font-heading); font-size:20px; margin-bottom:8px;">No ideas yet</h3>
+          <p style="color:var(--text-muted); font-size:14px;">Ideas from your business boards will appear here once tagged with status "ideas".</p>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
   }
 
   // ─── Render: Grow Detail ───

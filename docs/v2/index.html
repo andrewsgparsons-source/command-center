@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="theme-color" content="#FFFBF5">
   <title>Solution Planner v2</title>
-  <link rel="stylesheet" href="src/planner.css?v=2">
-  <link rel="stylesheet" href="src/item-detail.css?v=2">
+  <link rel="stylesheet" href="src/planner.css?v=3">
+  <link rel="stylesheet" href="src/item-detail.css?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -45,6 +45,10 @@
       <div class="nav-separator"></div>
       <div class="nav-group-label">Businesses</div>
 
+      <div class="nav-item" data-view="businesses">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Overview</span>
+      </div>
       <div class="nav-item" data-view="biz-sheds">
         <span class="nav-icon">🏠</span>
         <span class="nav-label">Garden Buildings</span>
@@ -82,6 +86,18 @@
         <span class="nav-icon">🔧</span>
         <span class="nav-label">Configurator</span>
       </a>
+
+      <div class="nav-separator"></div>
+      <div class="nav-group-label">More</div>
+
+      <div class="nav-item" data-view="personal">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Personal</span>
+      </div>
+      <div class="nav-item" data-view="ideas">
+        <span class="nav-icon">💡</span>
+        <span class="nav-label">Ideas</span>
+      </div>
     </nav>
 
     <div class="sidebar-footer">
@@ -270,10 +286,37 @@
       </div>
       <div id="growDetail"></div>
     </div>
+
+    <!-- Businesses Overview -->
+    <div class="view" id="view-businesses" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">📊 Business Overview</h1>
+        <p class="view-subtitle">All four businesses at a glance</p>
+      </div>
+      <div id="businessesOverview"></div>
+    </div>
+
+    <!-- Personal View -->
+    <div id="view-personal" class="view" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">👤 Personal</h1>
+        <p class="view-subtitle">Life admin, health, goals</p>
+      </div>
+      <div id="personalDetail"></div>
+    </div>
+
+    <!-- Ideas View -->
+    <div id="view-ideas" class="view" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">💡 Ideas</h1>
+        <p class="view-subtitle">Ideas from across all businesses — the seeds that haven't sprouted yet</p>
+      </div>
+      <div id="ideasDetail"></div>
+    </div>
   </main>
 
   <script src="src/firebase-sync.js"></script>
-  <script src="src/item-detail.js?v=2"></script>
-  <script src="src/planner.js?v=2"></script>
+  <script src="src/item-detail.js?v=3"></script>
+  <script src="src/planner.js?v=3"></script>
 </body>
 </html>

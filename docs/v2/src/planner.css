@@ -1388,8 +1388,124 @@ button, .nav-item, .question-card, .biz-card {
   margin-top: 4px;
 }
 
-/* ===== MOBILE RESPONSIVE — Kanban ===== */
+/* ===== BUSINESSES OVERVIEW ===== */
+.biz-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.biz-overview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.biz-overview-card:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.biz-overview-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.biz-overview-emoji { font-size: 28px; }
+
+.biz-overview-name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.biz-overview-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.biz-overview-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.biz-ov-stat {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.biz-ov-stat strong {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.biz-overview-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  margin-top: auto;
+  transition: opacity var(--transition);
+}
+
+.biz-overview-link:hover {
+  opacity: 0.7;
+}
+
+/* ===== IDEAS LIST ===== */
+.ideas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.idea-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.idea-item:last-child {
+  border-bottom: none;
+}
+
+.idea-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+  margin-right: 12px;
+}
+
+/* ===== BUILD HASH ===== */
+.build-hash {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+}
+
+/* ===== MOBILE RESPONSIVE — Kanban + Overview ===== */
 @media (max-width: 1024px) {
+  .biz-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
   .mini-kanban {
     flex-wrap: nowrap;
     overflow-x: auto;
