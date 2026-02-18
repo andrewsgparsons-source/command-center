@@ -145,25 +145,157 @@
     moveTask('business/' + bizKey + '/tasks', taskId, newStatus);
   }
 
+  // ─── User Identity ───
+  const USER_KEY = 'firesync-user';
+  const KNOWN_USERS = ['Andrew', 'Nicki', 'Hilary', 'James'];
+
+  function getUser() {
+    return localStorage.getItem(USER_KEY) || null;
+  }
+
+  function setUser(name) {
+    localStorage.setItem(USER_KEY, name);
+  }
+
+  function ensureUser() {
+    if (getUser()) return Promise.resolve(getUser());
+
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+      overlay.innerHTML = `
+        <div style="background:white;border-radius:16px;padding:28px;max-width:360px;width:100%;text-align:center;font-family:Inter,sans-serif;">
+          <div style="font-size:28px;margin-bottom:8px;">👋</div>
+          <h2 style="font-family:Playfair Display,serif;margin:0 0 8px;font-size:1.3rem;">Who are you?</h2>
+          <p style="color:#57534E;font-size:14px;margin:0 0 20px;">This helps everyone know who made changes.</p>
+          <div id="userButtons" style="display:flex;flex-direction:column;gap:8px;">
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const btnContainer = overlay.querySelector('#userButtons');
+      KNOWN_USERS.forEach(name => {
+        const btn = document.createElement('button');
+        btn.textContent = name;
+        btn.style.cssText = 'padding:12px;border-radius:10px;border:1.5px solid #E7E0D8;background:#F5F0EB;font-size:15px;font-family:Inter,sans-serif;cursor:pointer;transition:all 0.15s';
+        btn.addEventListener('mouseover', () => { btn.style.background = '#B45309'; btn.style.color = 'white'; btn.style.borderColor = '#B45309'; });
+        btn.addEventListener('mouseout', () => { btn.style.background = '#F5F0EB'; btn.style.color = '#1C1917'; btn.style.borderColor = '#E7E0D8'; });
+        btn.addEventListener('click', () => {
+          setUser(name);
+          overlay.remove();
+          resolve(name);
+        });
+        btnContainer.appendChild(btn);
+      });
+    });
+  }
+
+  // ─── Activity Feed ───
+  const ACTIVITY_PATH = 'activity';
+
+  function logActivity(action, details) {
+    onReady(() => {
+      const entry = {
+        user: getUser() || 'Unknown',
+        action: action,
+        details: details || {},
+        timestamp: new Date().toISOString(),
+        dashboard: document.title || 'Unknown'
+      };
+      db.ref(ACTIVITY_PATH).push(entry);
+    });
+  }
+
+  // Listen for recent activity
+  function onActivity(callback, limit) {
+    onReady(() => {
+      db.ref(ACTIVITY_PATH).orderByChild('timestamp').limitToLast(limit || 50).on('value', snap => {
+        callback(snap.val() || {});
+      });
+    });
+  }
+
+  // ─── Wrap CRUD with activity logging ───
+  const _origAddTask = addTask;
+  const _origUpdateTask = updateTask;
+  const _origDeleteTask = deleteTask;
+  const _origMoveTask = moveTask;
+
+  function addTaskLogged(path, task) {
+    task.createdBy = getUser() || 'Unknown';
+    _origAddTask(path, task);
+    logActivity('added', { path: path, title: task.title || task.text || '' });
+  }
+
+  function updateTaskLogged(path, taskId, updates) {
+    _origUpdateTask(path, taskId, updates);
+    logActivity('updated', { path: path, taskId: taskId, fields: Object.keys(updates) });
+  }
+
+  function deleteTaskLogged(path, taskId) {
+    _origDeleteTask(path, taskId);
+    logActivity('deleted', { path: path, taskId: taskId });
+  }
+
+  function moveTaskLogged(path, taskId, newStatus) {
+    _origMoveTask(path, taskId, newStatus);
+    logActivity('moved', { path: path, taskId: taskId, newStatus: newStatus });
+  }
+
+  // Override attention helpers to use logged versions
+  function addAttentionItemLogged(item) {
+    item.status = item.status || 'active';
+    item.createdBy = getUser() || 'Unknown';
+    addTaskLogged(ATTENTION_PATH, item);
+  }
+
+  function completeAttentionItemLogged(id) {
+    moveTaskLogged(ATTENTION_PATH, id, 'done');
+    logActivity('completed', { itemId: id });
+  }
+
+  function dismissAttentionItemLogged(id) {
+    moveTaskLogged(ATTENTION_PATH, id, 'dismissed');
+    logActivity('dismissed', { itemId: id });
+  }
+
   // ─── Export ───
   window.FireSync = {
     init,
     onReady,
     db: () => db,
 
-    // Generic
+    // User
+    getUser,
+    setUser,
+    ensureUser,
+    KNOWN_USERS,
+
+    // Generic (with logging)
     getTasks,
     onTasks,
-    addTask,
-    updateTask,
-    deleteTask,
-    moveTask,
+    addTask: addTaskLogged,
+    updateTask: updateTaskLogged,
+    deleteTask: deleteTaskLogged,
+    moveTask: moveTaskLogged,
 
-    // Attention items
+    // Raw (no logging) — for internal use
+    _addTask: _origAddTask,
+    _updateTask: _origUpdateTask,
+    _deleteTask: _origDeleteTask,
+    _moveTask: _origMoveTask,
+
+    // Attention items (with logging)
     onAttentionItems,
-    addAttentionItem,
-    completeAttentionItem,
-    dismissAttentionItem,
+    addAttentionItem: addAttentionItemLogged,
+    completeAttentionItem: completeAttentionItemLogged,
+    dismissAttentionItem: dismissAttentionItemLogged,
+
+    // Activity feed
+    logActivity,
+    onActivity,
+    ACTIVITY_PATH,
 
     // Business tasks
     onBusinessTasks,

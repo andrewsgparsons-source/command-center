@@ -212,7 +212,7 @@
 
     FireSync.addTask(NOTES_PATH + '/' + currentItemId, {
       text: text,
-      author: 'Andrew',
+      author: FireSync.getUser() || 'Unknown',
       createdAt: new Date().toISOString()
     });
 

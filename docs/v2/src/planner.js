@@ -30,6 +30,18 @@
     await loadAllData();
     switchView(state.currentView);
     document.getElementById('loadingScreen').style.display = 'none';
+
+    // Ask who's using this (first time only)
+    if (window.FireSync) {
+      await FireSync.ensureUser();
+      // Update greeting with name
+      const name = FireSync.getUser();
+      if (name) {
+        const h = new Date().getHours();
+        const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        document.getElementById('greeting').textContent = g + ', ' + name;
+      }
+    }
   });
 
   // ─── Greeting ───
@@ -149,7 +161,9 @@
     document.getElementById('navGptBadge').textContent = state.gptChats.length;
     // Attention badge is updated by Firebase listener
     document.getElementById('navShedBadge').textContent = state.shedCards.filter(c => c.status === 'in-progress').length;
-    document.getElementById('sidebarStatus').textContent = `Data loaded · ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
+    const userName = window.FireSync ? FireSync.getUser() : '';
+    const userLabel = userName ? ` · ${userName}` : '';
+    document.getElementById('sidebarStatus').textContent = `Data loaded · ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}${userLabel}`;
   }
 
   // ─── Attention Items (Firebase-powered) ───
