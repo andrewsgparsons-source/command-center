@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFBF5">
+  <title>Solution Planner v2</title>
+  <link rel="stylesheet" href="src/planner.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">⚡</span>
+      <div class="sidebar-brand">
+        <span class="sidebar-title">Solution Planner</span>
+        <span class="sidebar-subtitle">Andrew & James</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-item active" data-view="today">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Today</span>
+        <span class="nav-badge urgent" id="navAttentionBadge">0</span>
+      </div>
+      <div class="nav-item" data-view="questions">
+        <span class="nav-icon">❓</span>
+        <span class="nav-label">The 8 Questions</span>
+      </div>
+      <div class="nav-item" data-view="james">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">James</span>
+      </div>
+      <div class="nav-item" data-view="gpt-chats">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Chats with GPT</span>
+        <span class="nav-badge" id="navGptBadge">0</span>
+      </div>
+
+      <div class="nav-separator"></div>
+      <div class="nav-group-label">Businesses</div>
+
+      <div class="nav-item" data-view="biz-sheds">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Garden Buildings</span>
+        <span class="nav-badge" id="navShedBadge">0</span>
+      </div>
+      <div class="nav-item" data-view="biz-farm">
+        <span class="nav-icon">🌾</span>
+        <span class="nav-label">Whelpley Farm</span>
+      </div>
+      <div class="nav-item" data-view="biz-forge">
+        <span class="nav-icon">☕</span>
+        <span class="nav-label">Forge AI</span>
+      </div>
+      <div class="nav-item" data-view="biz-grow">
+        <span class="nav-icon">🌱</span>
+        <span class="nav-label">Grow Cabin</span>
+      </div>
+
+      <div class="nav-separator"></div>
+      <div class="nav-group-label">Links</div>
+
+      <a class="nav-item nav-link" href="https://andrewsgparsons-source.github.io/shed-project-board/" target="_blank">
+        <span class="nav-icon">↗</span>
+        <span class="nav-label">Shed Board (v1)</span>
+      </a>
+      <a class="nav-item nav-link" href="https://andrewsgparsons-source.github.io/whelpley-farm-dashboard/" target="_blank">
+        <span class="nav-icon">↗</span>
+        <span class="nav-label">Farm Dashboard (v1)</span>
+      </a>
+      <a class="nav-item nav-link" href="https://andrewsgparsons-source.github.io/Parametric-shed2-staging/" target="_blank">
+        <span class="nav-icon">🔧</span>
+        <span class="nav-label">Configurator</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-status" id="sidebarStatus">Loading...</div>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="mobile-header" id="mobileHeader">
+    <button class="mobile-menu-btn" id="menuBtn">☰</button>
+    <span class="mobile-title">Solution Planner</span>
+    <span class="mobile-greeting" id="mobileGreeting"></span>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content" id="mainContent">
+    <!-- Loading -->
+    <div id="loadingScreen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p>Connecting to dashboards...</p>
+    </div>
+
+    <!-- Today View -->
+    <div class="view" id="view-today" style="display:none">
+      <div class="view-header">
+        <h1 id="greeting" class="view-title"></h1>
+        <div class="biz-filter" id="businessFilter">
+          <button class="biz-pill active" data-biz="all">All</button>
+          <button class="biz-pill" data-biz="sheds">🏠 Sheds</button>
+          <button class="biz-pill" data-biz="farm">🌾 Farm</button>
+          <button class="biz-pill" data-biz="forge">☕ Forge</button>
+          <button class="biz-pill" data-biz="grow">🌱 Grow</button>
+        </div>
+      </div>
+
+      <!-- Attention -->
+      <div class="card attention-card">
+        <div class="card-header">
+          <span class="card-icon">🔴</span>
+          <h2>Needs Your Attention</h2>
+          <span class="badge" id="attentionCount">0</span>
+          <button class="add-item-btn" onclick="window._showAddAttention()" title="Add item">+</button>
+        </div>
+        <div id="attentionList" class="card-body"></div>
+      </div>
+
+      <!-- Recently Completed (collapsed by default) -->
+      <div class="card done-card" id="doneCard" style="display:none">
+        <div class="card-header" onclick="document.getElementById('doneList').classList.toggle('collapsed')">
+          <span class="card-icon">✅</span>
+          <h2>Recently Done</h2>
+          <span class="badge" id="doneCount">0</span>
+          <span class="expand-icon">▼</span>
+        </div>
+        <div id="doneList" class="card-body collapsed"></div>
+      </div>
+
+      <!-- Add Item Overlay -->
+      <div class="add-item-overlay" id="addItemOverlay" style="display:none">
+        <div class="add-item-modal">
+          <h3>Add Item</h3>
+          <input type="text" id="addItemTitle" placeholder="What needs attention?" class="add-input" />
+          <input type="text" id="addItemDetail" placeholder="Details (optional)" class="add-input" />
+          <div class="add-row">
+            <select id="addItemBiz" class="add-select">
+              <option value="🏠">🏠 Sheds</option>
+              <option value="🌾">🌾 Farm</option>
+              <option value="☕">☕ Forge</option>
+              <option value="🌱">🌱 Grow</option>
+              <option value="⚡">⚡ General</option>
+            </select>
+            <select id="addItemPriority" class="add-select">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="add-buttons">
+            <button class="add-cancel-btn" onclick="window._hideAddAttention()">Cancel</button>
+            <button class="add-submit-btn" onclick="window._submitAttention()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-column: James + Money -->
+      <div class="today-grid">
+        <!-- James -->
+        <div class="card james-card">
+          <div class="card-header">
+            <span class="card-icon">🤖</span>
+            <h2>James</h2>
+          </div>
+          <div class="card-body">
+            <div class="james-label">WORKING ON:</div>
+            <div class="james-task" id="jamesTask">Dashboard Enhancement Sprint</div>
+            <div class="james-progress">
+              <div class="progress-bar"><div class="progress-fill" id="jamesProgress" style="width:40%"></div></div>
+              <span class="progress-text" id="jamesProgressLabel">40%</span>
+            </div>
+            <div class="james-needs-box">
+              <div class="james-label">NEEDS FROM YOU:</div>
+              <ul id="jamesNeedsList"></ul>
+            </div>
+            <div class="james-completed-row">
+              <span class="james-label">COMPLETED TODAY:</span>
+              <span class="james-stat" id="jamesCompletedCount">4</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Money -->
+        <div class="card money-card">
+          <div class="card-header">
+            <span class="card-icon">💰</span>
+            <h2>Money</h2>
+          </div>
+          <div class="card-body">
+            <div class="money-grid" id="moneyGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Business Cards -->
+      <div class="today-businesses">
+        <h3 class="subsection-title">Your Businesses</h3>
+        <div id="businessCards" class="biz-cards-grid"></div>
+      </div>
+    </div>
+
+    <!-- Questions View -->
+    <div class="view" id="view-questions" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">The 8 Questions</h1>
+        <p class="view-subtitle">Everything you need to know about your businesses, framed as 8 natural questions.</p>
+      </div>
+      <div id="questionCards"></div>
+    </div>
+
+    <!-- James View -->
+    <div class="view" id="view-james" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">James</h1>
+        <p class="view-subtitle">Your AI partner — what I'm working on and what I've delivered.</p>
+      </div>
+      <div id="jamesDetail"></div>
+    </div>
+
+    <!-- GPT Chats View -->
+    <div class="view" id="view-gpt-chats" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">💬 Chats with GPT</h1>
+        <p class="view-subtitle">Dog walk briefings — insight-rich thinking pieces generated from our current position.</p>
+      </div>
+      <div id="gptChatsList"></div>
+    </div>
+
+    <!-- Business Detail Views -->
+    <div class="view" id="view-biz-sheds" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">🏠 Garden Buildings</h1>
+        <p class="view-subtitle">Bespoke timber-framed garden buildings</p>
+      </div>
+      <div id="shedDetail"></div>
+    </div>
+
+    <div class="view" id="view-biz-farm" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">🌾 Whelpley Farm</h1>
+        <p class="view-subtitle">Family partnership — crops, livery, holiday let</p>
+      </div>
+      <div id="farmDetail"></div>
+    </div>
+
+    <div class="view" id="view-biz-forge" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">☕ Forge AI</h1>
+        <p class="view-subtitle">AI transition coaching &amp; retreats</p>
+      </div>
+      <div id="forgeDetail"></div>
+    </div>
+
+    <div class="view" id="view-biz-grow" style="display:none">
+      <div class="view-header">
+        <h1 class="view-title">🌱 Grow Cabin</h1>
+        <p class="view-subtitle">Controlled-environment home growing system</p>
+      </div>
+      <div id="growDetail"></div>
+    </div>
+  </main>
+
+  <script src="src/firebase-sync.js"></script>
+  <script src="src/planner.js"></script>
+</body>
+</html>
