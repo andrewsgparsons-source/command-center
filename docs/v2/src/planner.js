@@ -1018,7 +1018,7 @@
     // Use config.json mobileNav if available, otherwise defaults
     const navItems = (state.configData && state.configData.mobileNav) ? state.configData.mobileNav : [
       { id: 'today', label: 'Today', icon: '🎯' },
-      { id: 'questions', label: 'Questions', icon: '❓' },
+      { id: 'personal', label: 'Personal', icon: '👤' },
       { id: 'james', label: 'James', icon: '🤖' },
       { id: 'businesses', label: 'More', icon: '☰' },
     ];
@@ -1140,15 +1140,137 @@
     });
   }
 
-  // ─── Render: Personal (placeholder) ───
+  // ─── Render: Personal (Financial Dashboard) ───
   function renderPersonal() {
-    document.getElementById('personalDetail').innerHTML = `
-      <div class="detail-card" style="text-align:center; padding:48px 24px;">
-        <div style="font-size:48px; margin-bottom:16px;">👤</div>
-        <h3 style="font-family:var(--font-heading); font-size:20px; margin-bottom:8px;">Your personal space</h3>
-        <p style="color:var(--text-muted); font-size:14px; max-width:400px; margin:0 auto;">Life admin, health, goals, habits — everything that's just for you. Coming soon!</p>
-      </div>
-    `;
+    const container = document.getElementById('personalDetail');
+    container.innerHTML = '<div class="detail-card" style="text-align:center; padding:24px;"><p>Loading financial data...</p></div>';
+
+    // Fetch personal finance data from Firebase
+    fetch('https://dashboards-5c2fb-default-rtdb.europe-west1.firebasedatabase.app/personal/finances.json')
+      .then(r => r.json())
+      .then(data => {
+        if (!data || !data.summary) {
+          container.innerHTML = '<div class="detail-card" style="text-align:center; padding:48px 24px;"><div style="font-size:48px; margin-bottom:16px;">👤</div><h3>No financial data yet</h3><p style="color:var(--text-muted);">Ask James to import your bank statements.</p></div>';
+          return;
+        }
+
+        const s = data.summary;
+        const cats = data.categories || {};
+        const cards = data.credit_cards || {};
+        const crypto = data.crypto || {};
+        const monthly = data.monthly || {};
+
+        // Sort categories by amount descending
+        const catEntries = Object.entries(cats).sort((a, b) => (b[1].amount || 0) - (a[1].amount || 0));
+
+        // Format currency
+        const fmt = (n) => '£' + (n || 0).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        const fmt2 = (n) => '£' + (n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // Credit card total
+        const ccTotal = (cards.barclaycard ? cards.barclaycard.balance : 0) + (cards.mbna ? cards.mbna.balance : 0);
+        const ccInterest = (cards.barclaycard ? cards.barclaycard.annualInterest : 0) + (cards.mbna ? cards.mbna.annualInterest : 0);
+
+        // Monthly chart data
+        const months = Object.keys(monthly).sort();
+        const maxExp = Math.max(...months.map(m => monthly[m].expenses || 0), 1);
+
+        container.innerHTML = `
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:20px;">
+            <div class="detail-card" style="padding:16px; text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Income</div>
+              <div style="font-size:22px; font-weight:700; color:#3A7D1C;">${fmt(s.totalIncome)}</div>
+            </div>
+            <div class="detail-card" style="padding:16px; text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Expenses</div>
+              <div style="font-size:22px; font-weight:700; color:#C33;">${fmt(s.totalExpenses)}</div>
+            </div>
+            <div class="detail-card" style="padding:16px; text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Credit Cards</div>
+              <div style="font-size:22px; font-weight:700; color:#C33;">${fmt(ccTotal)}</div>
+            </div>
+            <div class="detail-card" style="padding:16px; text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">CC Interest/yr</div>
+              <div style="font-size:22px; font-weight:700; color:#C33;">${fmt(ccInterest)}</div>
+            </div>
+          </div>
+
+          ${cards.mbna || cards.barclaycard ? `
+          <div class="detail-card" style="padding:16px; margin-bottom:16px;">
+            <h3 style="font-family:var(--font-heading); font-size:16px; margin-bottom:12px;">⚠️ Credit Cards</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              ${cards.mbna ? `<div style="padding:12px; background:rgba(204,51,51,0.08); border-radius:8px; border-left:3px solid #C33;">
+                <div style="font-weight:600; margin-bottom:4px;">MBNA</div>
+                <div style="font-size:20px; font-weight:700;">${fmt(cards.mbna.balance)}</div>
+                <div style="font-size:12px; color:var(--text-muted);">${cards.mbna.apr}% APR</div>
+                <div style="font-size:12px; color:#C33;">~${fmt(cards.mbna.annualInterest)}/yr interest</div>
+              </div>` : ''}
+              ${cards.barclaycard ? `<div style="padding:12px; background:rgba(204,51,51,0.05); border-radius:8px; border-left:3px solid #E88;">
+                <div style="font-weight:600; margin-bottom:4px;">Barclaycard</div>
+                <div style="font-size:20px; font-weight:700;">${fmt(cards.barclaycard.balance)}</div>
+                <div style="font-size:12px; color:var(--text-muted);">${cards.barclaycard.apr}% APR</div>
+                <div style="font-size:12px; color:#C33;">~${fmt(cards.barclaycard.annualInterest)}/yr interest</div>
+              </div>` : ''}
+            </div>
+          </div>` : ''}
+
+          <div class="detail-card" style="padding:16px; margin-bottom:16px;">
+            <h3 style="font-family:var(--font-heading); font-size:16px; margin-bottom:12px;">📊 Monthly Spending</h3>
+            <div style="display:flex; align-items:flex-end; gap:4px; height:120px;">
+              ${months.map(m => {
+                const exp = monthly[m].expenses || 0;
+                const pct = (exp / maxExp) * 100;
+                const label = m.split('-')[1];
+                const monthNames = {'04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec','01':'Jan','02':'Feb','03':'Mar'};
+                return `<div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+                  <div style="font-size:9px; color:var(--text-muted); margin-bottom:2px;">${fmt(exp)}</div>
+                  <div style="width:100%; background:var(--accent); border-radius:4px 4px 0 0; height:${Math.max(pct, 2)}%;"></div>
+                  <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">${monthNames[label] || label}</div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <div class="detail-card" style="padding:16px; margin-bottom:16px;">
+            <h3 style="font-family:var(--font-heading); font-size:16px; margin-bottom:12px;">💳 Spending by Category</h3>
+            ${catEntries.map(([cat, info]) => {
+              const pct = ((info.amount || 0) / s.totalExpenses) * 100;
+              const label = cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+              return `<div style="margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:2px;">
+                  <span>${label}</span>
+                  <span style="font-weight:600;">${fmt2(info.amount)} <span style="color:var(--text-muted); font-weight:400;">(${info.txns || '?'})</span></span>
+                </div>
+                <div style="background:var(--surface); border-radius:4px; height:8px; overflow:hidden;">
+                  <div style="background:var(--accent); height:100%; width:${pct}%; border-radius:4px;"></div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+
+          ${crypto && crypto.totalDisposals ? `
+          <div class="detail-card" style="padding:16px; margin-bottom:16px;">
+            <h3 style="font-family:var(--font-heading); font-size:16px; margin-bottom:12px;">₿ Crypto</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
+              <div><span style="color:var(--text-muted);">BTC sold:</span> ${fmt(crypto.btc ? crypto.btc.sold : 0)}</div>
+              <div><span style="color:var(--text-muted);">USDT sold:</span> ${fmt(crypto.usdt ? crypto.usdt.sold : 0)}</div>
+              <div><span style="color:var(--text-muted);">Total disposals:</span> ${fmt(crypto.totalDisposals)}</div>
+              <div><span style="color:var(--text-muted);">Fees:</span> ${fmt(crypto.totalFees)}</div>
+            </div>
+            <div style="margin-top:8px; padding:8px; background:rgba(255,170,0,0.1); border-radius:6px; font-size:12px;">
+              ⚠️ CGT exempt: £${crypto.cgtExempt || 3000} — check if gains exceed this
+            </div>
+          </div>` : ''}
+
+          <div style="font-size:11px; color:var(--text-muted); text-align:center; padding:8px;">
+            FY 2025/26 (Apr 2025 – Feb 2026) · Bank + Barclaycard + MBNA + Revolut
+          </div>
+        `;
+      })
+      .catch(err => {
+        container.innerHTML = '<div class="detail-card" style="text-align:center; padding:48px 24px;"><p style="color:#C33;">Failed to load financial data</p></div>';
+        console.error('Personal finance fetch error:', err);
+      });
   }
 
   // ─── Render: Ideas ───
