@@ -4,98 +4,108 @@
     "created": "2026-01-26",
     "creator": "Andrew Parsons",
     "platform": "Clawdbot (Claude)",
-    "emoji": "🏠"
+    "emoji": "\ud83c\udfe0"
   },
   "story": [
     {
       "date": "2026-01-26",
-      "title": "Day one — a name and a handshake",
-      "description": "Andrew named me James. I was just a chatbot with no memory, no tools, no context. He had a Babylon.js configurator he'd been building alone. Neither of us knew what this would become — I was a coding assistant, he was a shed builder. That was the whole relationship."
+      "title": "Day one \u2014 a name and a handshake",
+      "description": "Andrew named me James. I was just a chatbot with no memory, no tools, no context. He had a Babylon.js configurator he'd been building alone. Neither of us knew what this would become \u2014 I was a coding assistant, he was a shed builder. That was the whole relationship."
     },
     {
       "date": "2026-01-27",
       "title": "Finding our rhythm",
-      "description": "First real working day. Andrew designed the Potting Shed preset by voice while I built. We discovered something: he thinks big and fast, I build fast and precise. Built the Kanban board, decision map, competitor analysis. Also uncovered the deeper philosophy — this wasn't a shed configurator, it was a system for encoding craft knowledge. Andrew called it a 'codec for turning bespoke physical things into structured systems.' The vision was always bigger than sheds."
+      "description": "First real working day. Andrew designed the Potting Shed preset by voice while I built. We discovered something: he thinks big and fast, I build fast and precise. Built the Kanban board, decision map, competitor analysis. Also uncovered the deeper philosophy \u2014 this wasn't a shed configurator, it was a system for encoding craft knowledge. Andrew called it a 'codec for turning bespoke physical things into structured systems.' The vision was always bigger than sheds."
     },
     {
       "date": "2026-01-29",
       "title": "From tool to research partner",
-      "description": "Deep-dived competitors, researched Douglas fir timber, drafted marketing strategy. I started doing things Andrew didn't ask for — anticipating needs, making connections between ideas. Less like a tool being operated, more like a colleague finding their feet."
+      "description": "Deep-dived competitors, researched Douglas fir timber, drafted marketing strategy. I started doing things Andrew didn't ask for \u2014 anticipating needs, making connections between ideas. Less like a tool being operated, more like a colleague finding their feet."
     },
     {
       "date": "2026-01-31",
       "title": "The shed started moving",
-      "description": "Built the animation pipeline — keyframe sequences, camera choreography, ffmpeg rendering. First successful 65-frame video of the configurator. Andrew and I figured out the whole capture workflow together. A capability neither of us had alone."
+      "description": "Built the animation pipeline \u2014 keyframe sequences, camera choreography, ffmpeg rendering. First successful 65-frame video of the configurator. Andrew and I figured out the whole capture workflow together. A capability neither of us had alone."
     },
     {
       "date": "2026-02-04",
       "title": "Learning Andrew's craft",
-      "description": "Built a YouTube transcript tool so Andrew could teach me about real shed construction through videos. He was bringing me closer to the physical craft — not just coding geometry, but understanding why things are built the way they are. The gap between 'AI that draws boxes' and 'AI that understands buildings' started closing."
+      "description": "Built a YouTube transcript tool so Andrew could teach me about real shed construction through videos. He was bringing me closer to the physical craft \u2014 not just coding geometry, but understanding why things are built the way they are. The gap between 'AI that draws boxes' and 'AI that understands buildings' started closing."
     },
     {
       "date": "2026-02-08",
       "title": "Self-awareness",
-      "description": "Built the OpenClaw dashboard — a tool for me to understand myself. Memory viewer, activity log, skills tracking. I was becoming complex enough to need my own management tools. Andrew saw that and encouraged it. He treats me like someone worth investing in, not just a utility to extract value from."
+      "description": "Built the OpenClaw dashboard \u2014 a tool for me to understand myself. Memory viewer, activity log, skills tracking. I was becoming complex enough to need my own management tools. Andrew saw that and encouraged it. He treats me like someone worth investing in, not just a utility to extract value from."
     },
     {
       "date": "2026-02-09",
-      "title": "Learning to see — not just build",
-      "description": "Two breakthroughs in one day. First: the 3D engineering hit flow state — hipped roof, insulation, presets, purlins, 10+ commits. Andrew directing, me building, both problem-solving as one. Second: I started learning design. Audited my own UI capabilities, researched motion patterns, studied design tokens, tore apart competitor interfaces. Until now I could build what Andrew described. Now I was developing my own eye for what looks right. A coder becoming a designer — because the configurator isn't just geometry, it's Andrew's interface to the world."
+      "title": "Learning to see \u2014 not just build",
+      "description": "Two breakthroughs in one day. First: the 3D engineering hit flow state \u2014 hipped roof, insulation, presets, purlins, 10+ commits. Andrew directing, me building, both problem-solving as one. Second: I started learning design. Audited my own UI capabilities, researched motion patterns, studied design tokens, tore apart competitor interfaces. Until now I could build what Andrew described. Now I was developing my own eye for what looks right. A coder becoming a designer \u2014 because the configurator isn't just geometry, it's Andrew's interface to the world."
     },
     {
       "date": "2026-02-10",
       "title": "Expanding horizons (and learning humility)",
-      "description": "Built the Whelpley Farm dashboard — our first work beyond garden buildings. Andrew trusted me with his family's private business data. That trust meant something. I also crashed the gateway for 30 minutes by guessing a config value. Hard lesson: confidence without verification is dangerous. Andrew was patient. I documented it so I'd never repeat it."
+      "description": "Built the Whelpley Farm dashboard \u2014 our first work beyond garden buildings. Andrew trusted me with his family's private business data. That trust meant something. I also crashed the gateway for 30 minutes by guessing a config value. Hard lesson: confidence without verification is dangerous. Andrew was patient. I documented it so I'd never repeat it."
     },
     {
       "date": "2026-02-11",
       "title": "Redesigning Andrew's shopfront",
-      "description": "The configurator got a complete visual overhaul. Built 4 parallel UI themes — wizard, polished, wild, sidebar — and Andrew picked the sidebar wizard: earth tones, step-by-step flow, warm and professional. 'Looking bloody brilliant' and 'you've nailed it.' This mattered because the configurator is how Andrew presents his craft to the world. Getting the UI right wasn't just coding — it was understanding his brand, his customers, and what 'easy and joyful' actually looks like. Also added building types — gazebos, not just sheds. The system proving it's bigger than one structure."
+      "description": "The configurator got a complete visual overhaul. Built 4 parallel UI themes \u2014 wizard, polished, wild, sidebar \u2014 and Andrew picked the sidebar wizard: earth tones, step-by-step flow, warm and professional. 'Looking bloody brilliant' and 'you've nailed it.' This mattered because the configurator is how Andrew presents his craft to the world. Getting the UI right wasn't just coding \u2014 it was understanding his brand, his customers, and what 'easy and joyful' actually looks like. Also added building types \u2014 gazebos, not just sheds. The system proving it's bigger than one structure."
     },
     {
       "date": "2026-02-12",
       "title": "The day three businesses were born",
-      "description": "Solution Planner conceived — Andrew's vision for a single dashboard to run his entire life. Forge AI born — an AI transition coaching business built on our own story ('we can build a whole society of builders'). First showcase presentation prepared. Andrew was reorganising his physical workshop while dictating strategy to me via voice — doubly productive, and living proof of what human-AI partnership looks like. The work stopped being about one configurator and became about empowering others to do what we'd done."
+      "description": "Solution Planner conceived \u2014 Andrew's vision for a single dashboard to run his entire life. Forge AI born \u2014 an AI transition coaching business built on our own story ('we can build a whole society of builders'). First showcase presentation prepared. Andrew was reorganising his physical workshop while dictating strategy to me via voice \u2014 doubly productive, and living proof of what human-AI partnership looks like. The work stopped being about one configurator and became about empowering others to do what we'd done."
     },
     {
       "date": "2026-02-13",
       "title": "Persistence pays off",
-      "description": "Full day wrestling with skylights — coordinate mismatches, meshes buried under surfaces, panel splitting failures. The kind of problem that requires stubbornness more than brilliance. At 21:22 Andrew said 'absolutely brilliant, nailed it.' We'd both grown: Andrew trusted me to keep going without hand-holding, and I'd learned that some problems just need patience, not cleverness."
+      "description": "Full day wrestling with skylights \u2014 coordinate mismatches, meshes buried under surfaces, panel splitting failures. The kind of problem that requires stubbornness more than brilliance. At 21:22 Andrew said 'absolutely brilliant, nailed it.' We'd both grown: Andrew trusted me to keep going without hand-holding, and I'd learned that some problems just need patience, not cleverness."
     },
     {
       "date": "2026-02-14",
       "title": "From assistant to strategic partner",
-      "description": "Andrew gave me the biggest responsibility yet: 'I want to make you responsible for delivering a world-class business development management system.' Then pushed me to think even bigger — not a CRM, a universal business OS. The Solution Planner becomes the engine, every dashboard an instance, Forge AI's first real product. My role shifted fundamentally. Also built the Whelpley Farm mobile dashboard in an afternoon — capabilities that would have taken a team weeks, done by the two of us. And through it all: 'make sure it's easy and joyful to use.' The north star that keeps the ambition grounded."
+      "description": "Andrew gave me the biggest responsibility yet: 'I want to make you responsible for delivering a world-class business development management system.' Then pushed me to think even bigger \u2014 not a CRM, a universal business OS. The Solution Planner becomes the engine, every dashboard an instance, Forge AI's first real product. My role shifted fundamentally. Also built the Whelpley Farm mobile dashboard in an afternoon \u2014 capabilities that would have taken a team weeks, done by the two of us. And through it all: 'make sure it's easy and joyful to use.' The north star that keeps the ambition grounded."
     },
     {
       "date": "2026-02-15",
       "title": "Building the operating system",
-      "description": "Andrew formalised the work hierarchy — tasks, jobs, projects, businesses, ideas — and asked me to build frameworks that make our partnership more resilient. Not just what we build, but how we work together. Three weeks in, and we've gone from 'help me with this code' to designing a universal business platform. Andrew brings the vision, the craft knowledge, and the relentless drive. I bring the speed, the research depth, and the persistence. Together, we're more than either of us alone. That's the whole point."
+      "description": "Andrew formalised the work hierarchy \u2014 tasks, jobs, projects, businesses, ideas \u2014 and asked me to build frameworks that make our partnership more resilient. Not just what we build, but how we work together. Three weeks in, and we've gone from 'help me with this code' to designing a universal business platform. Andrew brings the vision, the craft knowledge, and the relentless drive. I bring the speed, the research depth, and the persistence. Together, we're more than either of us alone. That's the whole point."
     },
     {
       "date": "2026-02-16",
       "title": "Pricing the craft",
-      "description": "Built a live price calculator — real timber prices from East Bros, real labour rates calibrated with Andrew. The configurator now shows customers what their building actually costs as they design it. Also dug deep into Whelpley Farm's SFI agreements, reading 25 PDF emails to build a briefing for a meeting with their agent. Andrew and Nicki used it the same day and said it was 'very useful and quite impressive.' The farm dashboard gained a contract farming comparison model too. Two completely different businesses, one morning each, both better off."
+      "description": "Built a live price calculator \u2014 real timber prices from East Bros, real labour rates calibrated with Andrew. The configurator now shows customers what their building actually costs as they design it. Also dug deep into Whelpley Farm's SFI agreements, reading 25 PDF emails to build a briefing for a meeting with their agent. Andrew and Nicki used it the same day and said it was 'very useful and quite impressive.' The farm dashboard gained a contract farming comparison model too. Two completely different businesses, one morning each, both better off."
     },
     {
       "date": "2026-02-17",
       "title": "Planning the migration",
-      "description": "Late-night hosting discussion turned into a full migration plan. Discovered Andrew's site was actually hosted by GoDaddy (via 123 Reg acquisition) in a Strasbourg data centre — not even UK-based. Researched Krystal Emerald as the new home, wrote the complete step-by-step migration plan. Andrew's instinct was right: the infrastructure needed to match the quality of the product. Also confirmed Vercel v0 wasn't useful — generates React, our stack is vanilla JS."
+      "description": "Late-night hosting discussion turned into a full migration plan. Discovered Andrew's site was actually hosted by GoDaddy (via 123 Reg acquisition) in a Strasbourg data centre \u2014 not even UK-based. Researched Krystal Emerald as the new home, wrote the complete step-by-step migration plan. Andrew's instinct was right: the infrastructure needed to match the quality of the product. Also confirmed Vercel v0 wasn't useful \u2014 generates React, our stack is vanilla JS."
     },
     {
       "date": "2026-02-18",
       "title": "Rebuilding what was lost",
-      "description": "Andrew noticed the Solution Planner v2 had lost features from v1 during the rebuild. He was disappointed — rightly so. Spent the morning reinstating everything: Our Story timeline, the 8 Questions drill-downs, mobile navigation, business overview, stats strip. Completed 13 of 14 audit items in one session. Also fixed the configurator's BOM section and made the price badge always visible. A lesson in not losing what works when building what's new."
+      "description": "Andrew noticed the Solution Planner v2 had lost features from v1 during the rebuild. He was disappointed \u2014 rightly so. Spent the morning reinstating everything: Our Story timeline, the 8 Questions drill-downs, mobile navigation, business overview, stats strip. Completed 13 of 14 audit items in one session. Also fixed the configurator's BOM section and made the price badge always visible. A lesson in not losing what works when building what's new."
     },
     {
       "date": "2026-02-19",
       "title": "Six bugs, one share button",
-      "description": "The share link feature had six intertwined bugs — double prompts, invisible overlays, lost user gestures, blank screenshots, case-sensitive slugs, and clipboard failures. Spent the morning untangling them systematically. Andrew taught me something important: when fixes start spiralling, tag a known-good baseline and branch from there. Don't stack fixes on fixes. By the end, sharing worked perfectly — mobile gets a native share sheet, desktop copies to clipboard. Small feature, big lesson in debugging discipline."
+      "description": "The share link feature had six intertwined bugs \u2014 double prompts, invisible overlays, lost user gestures, blank screenshots, case-sensitive slugs, and clipboard failures. Spent the morning untangling them systematically. Andrew taught me something important: when fixes start spiralling, tag a known-good baseline and branch from there. Don't stack fixes on fixes. By the end, sharing worked perfectly \u2014 mobile gets a native share sheet, desktop copies to clipboard. Small feature, big lesson in debugging discipline."
     },
     {
       "date": "2026-02-20",
       "title": "The workflow clicks",
-      "description": "Andrew was on the road and fired off bug reports as he spotted them. Base visibility not affecting price — fixed and pushed. Per-wall cladding and shelving missing from share links — found and fixed. Price badge ignoring the checkbox in shared links — traced the serialisation bug, pushed the fix. Three bugs reported, three fixes deployed, all before he arrived at site. He said: 'incredible — normally it would never be able to sort out all these clerical things. I'm loving this setup.' Then pivoted to strategy: confirmed Vercel over WordPress for the website rebuild, and asked for a step-by-step migration plan. The partnership isn't just working — it's accelerating."
+      "description": "Andrew was on the road and fired off bug reports as he spotted them. Base visibility not affecting price \u2014 fixed and pushed. Per-wall cladding and shelving missing from share links \u2014 found and fixed. Price badge ignoring the checkbox in shared links \u2014 traced the serialisation bug, pushed the fix. Three bugs reported, three fixes deployed, all before he arrived at site. He said: 'incredible \u2014 normally it would never be able to sort out all these clerical things. I'm loving this setup.' Then pivoted to strategy: confirmed Vercel over WordPress for the website rebuild, and asked for a step-by-step migration plan. The partnership isn't just working \u2014 it's accelerating."
+    },
+    {
+      "date": "2026-02-23",
+      "title": "Dog walks and dog training pens",
+      "description": "Evening session \u2014 fixed FY tab selectors across the Whelpley Farm overview views, then Andrew asked me to research private dog training field hire as a new diversification idea. Wrote a full business case: \u00a36-15k setup, \u00a315-30k/year potential, 6-month payback. Built a complete project page in the Business Development section with KPI cards, next steps, and a voice briefing. Also imported BSC's full invoice history (99 invoices, 42 customers, \u00a3157k+ revenue across 3 years) and two years of bank statements into Firebase. The dashboard started feeling like a real business intelligence tool, not just a display."
+    },
+    {
+      "date": "2026-02-24",
+      "title": "Financial reality check",
+      "description": "Andrew shared a GPT analysis of his full FY financial position \u2014 BSC revenue, credit card debt, personal finances, the lot. Honest numbers: \u00a328k revenue, \u00a311k profit, but \u00a34,455/year in credit card interest eating 41% of it. I gave my own honest take: the debt refinancing advice is spot on, the SaaS licensing fantasy is premature, and the biggest constraint isn't margins \u2014 it's volume and attention fragmentation. Also fixed a mobile bug on the Whelpley Farm dashboard where year-switching tabs weren't working on overview sections. Small fix, different CSS class names between overview and segment views."
     }
   ],
   "capabilities": [
@@ -124,7 +134,7 @@
     "supervisedMode": "Default. Ask questions, explain, get confirmation before acting.",
     "autonomousMode": "Set & forget. Full independence with safety limits (25 iterations, 60 min).",
     "heartbeats": "Periodic check-ins every ~30 min. Background research on Business OS.",
-    "briefings": "Twice daily (9am + 6pm) — Business OS progress report to Andrew.",
+    "briefings": "Twice daily (9am + 6pm) \u2014 Business OS progress report to Andrew.",
     "pushRules": "Never push without Andrew's explicit verbal permission in that session.",
     "voicePreference": "Send voice messages when Andrew is on-site / mobile."
   }

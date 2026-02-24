@@ -1,17 +1,27 @@
 {
   "version": 1,
-  "lastUpdated": "2026-02-14T18:30:00Z",
+  "lastUpdated": "2026-02-24T09:00:00Z",
   "description": "Embryonic ideas and concepts that don't yet have their own project dashboard. Ideas graduate to their own dashboard when mature enough.",
   "ideas": [
     {
       "id": "1",
       "title": "Universal Business Operating System (Solution Planner v2)",
-      "description": "Transform the Solution Planner from a lightweight dashboard viewer into a comprehensive business management framework. Covers ALL business disciplines — project management, risk, R&D, production, materials, workflow, compliance, grants, environmental, resource management, waste (time + materials). Must be template-able so any business type can be spun up from it. The garden buildings dashboard, Whelpley Farm, Forge AI are all just instances of this universal framework. This IS the Forge AI product — the thing people clone and customise.",
+      "description": "Transform the Solution Planner from a lightweight dashboard viewer into a comprehensive business management framework. Covers ALL business disciplines \u2014 project management, risk, R&D, production, materials, workflow, compliance, grants, environmental, resource management, waste (time + materials). Must be template-able so any business type can be spun up from it. The garden buildings dashboard, Whelpley Farm, Forge AI are all just instances of this universal framework. This IS the Forge AI product \u2014 the thing people clone and customise.",
       "stage": "developing",
       "priority": "high",
-      "notes": "Andrew's directive 14 Feb 2026.\n\nKey insight: Don't think small. Don't anchor to garden buildings. The Solution Planner IS the product.\n\nResearch phases:\n1. Full landscape of business management disciplines (the MBA curriculum, essentially)\n2. Methodologies within each discipline (Agile, PRINCE2, Lean, Six Sigma, etc.)\n3. Software ecosystem for each discipline\n4. How disciplines interconnect — the universal model\n5. Architecture: how to make it template-able\n6. Prototype the framework in Solution Planner\n7. First template: garden buildings / construction\n8. Package as Forge AI product\n\nThis is the founding document: research/business-dev/00-vision-and-directive.md",
+      "notes": "Andrew's directive 14 Feb 2026.\n\nKey insight: Don't think small. Don't anchor to garden buildings. The Solution Planner IS the product.\n\nResearch phases \u2014 PROGRESS:\n\u2705 1. Full landscape of business management disciplines \u2014 01-discipline-landscape.md\n\u2705 2. Deep-dive each discipline (all 8 complete) \u2014 02 through 08\n\u2705 3. Work hierarchy model \u2014 09-work-hierarchy-model.md\n\u2705 4. Solution Planner v2 spec \u2014 10-solution-planner-v2-spec.md\n\u2705 5. Cross-discipline interconnection model \u2014 11-cross-discipline-interconnection-model.md\n\u2705 6. Universal business OS architecture \u2014 12-universal-business-os-architecture.md\n\u2b1c 7. First template: construction/trades\n\u2b1c 8. Forge AI product packaging\n\nFounding document: research/business-dev/00-vision-and-directive.md",
       "createdAt": "2026-02-14T18:09:00Z",
-      "updatedAt": "2026-02-14T18:30:00Z"
+      "updatedAt": "2026-02-24T09:00:00Z"
+    },
+    {
+      "id": "2",
+      "title": "Private Dog Training Field Hire",
+      "description": "Diversification opportunity for Whelpley Farm \u2014 private hire dog exercise/training field. Passive income model at \u00a38-15/hr. Setup cost \u00a36-15k, potential revenue \u00a315-30k/yr. Already has dashboard page in Business Development section.",
+      "stage": "researched",
+      "priority": "medium",
+      "notes": "Full research doc: research/dog-training-pen-business.md\nDashboard page built in WF Business Development section.\nKey considerations: planning permission (pre-app recommended), SSSI proximity, insurance.\nAndrew interested \u2014 needs site assessment and pre-app.",
+      "createdAt": "2026-02-23T21:00:00Z",
+      "updatedAt": "2026-02-23T21:00:00Z"
     }
   ]
 }
