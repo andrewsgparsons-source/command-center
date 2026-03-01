@@ -798,6 +798,7 @@
       <div class="detail-links">
         <a href="https://andrewsgparsons-source.github.io/shed-project-board/" target="_blank" class="detail-dash-link">📋 Open Project Board →</a>
         <a href="https://andrewsgparsons-source.github.io/Parametric-shed2-staging/" target="_blank" class="detail-dash-link">🔧 Open Configurator →</a>
+        <a href="https://my3dbuild.co.uk" target="_blank" class="detail-dash-link">🌐 My3DBuild Website →</a>
       </div>
       <div class="detail-card">
         <h3>Configurator Development</h3>
@@ -808,6 +809,29 @@
           <div class="detail-stat"><div class="detail-stat-value">${id}</div><div class="detail-stat-label">Ideas</div></div>
         </div>
         <div class="build-hash" id="shedBuildHash">🔧 Build: loading...</div>
+      </div>
+
+      <div class="detail-card">
+        <h3>🌐 My3DBuild Website</h3>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Customer-facing landing page &amp; configurator gateway</p>
+        <div class="detail-links" style="margin-bottom:12px;">
+          <a href="https://my3dbuild.co.uk" target="_blank" class="detail-dash-link">🌐 Live Site →</a>
+          <a href="https://github.com/andrewsgparsons-source/my3dbuild-website" target="_blank" class="detail-dash-link">📂 GitHub Repo →</a>
+        </div>
+        <div class="m3d-features" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Landing page</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Fullscreen configurator</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Photo gallery</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Video showcase</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Quote form + email</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">✅ Custom domain + SSL</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">⬜ SEO landing pages</div>
+          <div class="m3d-feat" style="font-size:12px; padding:6px 8px; background:var(--bg-tertiary, #f0ede8); border-radius:6px;">⬜ Analytics</div>
+        </div>
+        <div class="detail-stat-row">
+          <div class="detail-stat"><div class="detail-stat-value" id="m3dLeadCount">—</div><div class="detail-stat-label">Leads</div></div>
+          <div class="detail-stat"><div class="detail-stat-value" id="m3dLastCommit">—</div><div class="detail-stat-label">Last Deploy</div></div>
+        </div>
       </div>
 
       <div class="detail-card">
@@ -854,6 +878,37 @@
       .catch(() => {
         const el = document.getElementById('shedBuildHash');
         if (el) el.textContent = '🔧 Build: unavailable';
+      });
+
+    // Fetch My3DBuild lead count from Firebase
+    fetch('https://dashboards-5c2fb-default-rtdb.europe-west1.firebasedatabase.app/leads.json?shallow=true')
+      .then(r => r.ok ? r.json() : Promise.reject('not found'))
+      .then(data => {
+        const el = document.getElementById('m3dLeadCount');
+        if (el) el.textContent = data ? Object.keys(data).length : '0';
+      })
+      .catch(() => {
+        const el = document.getElementById('m3dLeadCount');
+        if (el) el.textContent = '—';
+      });
+
+    // Fetch My3DBuild last commit date from GitHub API
+    fetch('https://api.github.com/repos/andrewsgparsons-source/my3dbuild-website/commits?per_page=1')
+      .then(r => r.ok ? r.json() : Promise.reject('not found'))
+      .then(data => {
+        const el = document.getElementById('m3dLastCommit');
+        if (el && data && data[0]) {
+          const d = new Date(data[0].commit.author.date);
+          const now = new Date();
+          const diffH = Math.floor((now - d) / 3600000);
+          if (diffH < 1) el.textContent = 'Just now';
+          else if (diffH < 24) el.textContent = diffH + 'h ago';
+          else el.textContent = Math.floor(diffH / 24) + 'd ago';
+        }
+      })
+      .catch(() => {
+        const el = document.getElementById('m3dLastCommit');
+        if (el) el.textContent = '—';
       });
   }
 
