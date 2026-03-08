@@ -11,6 +11,7 @@
     gptChats: '../data/gpt-chats.json',
     james: '../data/james.json',
     config: '../data/config.json',
+    agents: '../data/agents.json',
   };
 
   // ─── State ───
@@ -23,6 +24,7 @@
     gptChats: [],
     jamesData: null,
     configData: null,
+    agents: null,
   };
 
   // ─── Init ───
@@ -122,6 +124,7 @@
       case 'questions': renderQuestions(); break;
       case 'james': renderJamesDetail(); break;
       case 'gpt-chats': renderGptChats(); break;
+      case 'team': renderTeam(); break;
       case 'biz-sheds': renderShedDetail(); break;
       case 'biz-farm': renderFarmDetail(); break;
       case 'biz-forge': renderForgeDetail(); break;
@@ -174,6 +177,7 @@
       fetch(DATA_URLS.gptChats).then(r => r.json()),
       fetch(DATA_URLS.james).then(r => r.json()),
       fetch(DATA_URLS.config).then(r => r.json()),
+      fetch(DATA_URLS.agents).then(r => r.json()),
     ]);
 
     if (results[0].status === 'fulfilled') {
@@ -193,12 +197,16 @@
     if (results[4].status === 'fulfilled') {
       state.jamesData = results[4].value;
     }
+    if (results[6].status === 'fulfilled') {
+      state.agents = results[6].value;
+    }
     if (results[5].status === 'fulfilled') {
       state.configData = results[5].value;
     }
 
     // Update sidebar badges
     document.getElementById('navGptBadge').textContent = state.gptChats.length;
+    document.getElementById('navTeamBadge').textContent = state.agents && state.agents.agents ? state.agents.agents.filter(a => a.status === 'active').length : 0;
     // Attention badge is updated by Firebase listener
     document.getElementById('navShedBadge').textContent = state.shedCards.filter(c => c.status === 'in-progress').length;
     const userName = window.FireSync ? FireSync.getUser() : '';
@@ -784,6 +792,121 @@
     const div = document.createElement('div');
     div.textContent = text;
     return preserveNewlines ? div.innerHTML.replace(/\n/g, '<br>') : div.innerHTML;
+  }
+
+  // ─── Render: My Team ───
+  function renderTeam() {
+    const container = document.getElementById('teamDetail');
+    
+    if (!state.agents || !state.agents.agents) {
+      container.innerHTML = '<div class="empty-state">Loading team data...</div>';
+      return;
+    }
+
+    const agents = state.agents.agents;
+    const models = state.agents.availableModels || [];
+    const activeCount = agents.filter(a => a.status === 'active').length;
+
+    const agentCards = agents.map(agent => {
+      const modelInfo = models.find(m => m.id === agent.model) || {};
+      const strengths = (modelInfo.strengths || []).join(', ');
+      
+      return `
+        <div class="card team-card">
+          <div class="team-card-header">
+            <div class="team-agent-name">
+              <h3>${agent.name}</h3>
+              ${agent.isDefault ? '<span class="team-badge team-badge-default">Default</span>' : ''}
+            </div>
+            <span class="team-status team-status-${agent.status}">${agent.status}</span>
+          </div>
+          <div class="team-card-body">
+            <div class="team-row">
+              <span class="team-label">Group:</span>
+              <span class="team-value">${agent.group}</span>
+            </div>
+            <div class="team-row">
+              <span class="team-label">Channel:</span>
+              <span class="team-value">${agent.channel || 'N/A'}</span>
+            </div>
+            <div class="team-row">
+              <span class="team-label">Model:</span>
+              <span class="team-value team-model">
+                <strong>${modelInfo.name || agent.modelAlias || 'Unknown'}</strong>
+                ${modelInfo.provider ? `<span class="team-provider">(${modelInfo.provider})</span>` : ''}
+              </span>
+            </div>
+            ${strengths ? `
+            <div class="team-row">
+              <span class="team-label">Strengths:</span>
+              <span class="team-value team-strengths">${strengths}</span>
+            </div>
+            ` : ''}
+            <div class="team-row">
+              <span class="team-label">Workspace:</span>
+              <span class="team-value team-workspace">${agent.workspace.replace('/home/ser/clawd', '~')}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="detail-card">
+        <h3>📊 Team Overview</h3>
+        <div class="detail-stat-row">
+          <div class="detail-stat">
+            <div class="detail-stat-value">${activeCount}</div>
+            <div class="detail-stat-label">Active Agents</div>
+          </div>
+          <div class="detail-stat">
+            <div class="detail-stat-value">${agents.length}</div>
+            <div class="detail-stat-label">Total Agents</div>
+          </div>
+          <div class="detail-stat">
+            <div class="detail-stat-value">${models.length}</div>
+            <div class="detail-stat-label">Available Models</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h3>🤖 AI Agents</h3>
+        <div class="team-grid">
+          ${agentCards}
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h3>🎯 Available Models</h3>
+        <div class="models-grid">
+          ${models.map(model => `
+            <div class="model-card">
+              <div class="model-header">
+                <h4>${model.name}</h4>
+                <span class="model-provider">${model.provider}</span>
+              </div>
+              <div class="model-strengths">
+                ${(model.strengths || []).map(s => `<span class="strength-tag">${s}</span>`).join('')}
+              </div>
+              <div class="model-footer">
+                <span class="model-cost">Cost: ${model.cost}</span>
+                <span class="model-alias">${model.alias}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h3>📝 Notes</h3>
+        <p style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+          <strong>Model switching:</strong> Interactive model switching will be added in Phase 3. For now, this shows the current configuration from Clawdbot.<br>
+          <strong>Activity tracking:</strong> Message counts and sub-agent spawn history will be added in Phase 4.<br>
+          <strong>Model comparison log:</strong> Track which models work best for which tasks - coming in Phase 5.
+        </p>
+      </div>
+    `;
   }
 
   // ─── Render: Shed Detail ───

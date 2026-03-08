@@ -1551,3 +1551,219 @@ button, .nav-item, .question-card, .biz-card {
   color: #fff;
   border-color: var(--accent);
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   My Team View
+   ───────────────────────────────────────────────────────────────── */
+
+.team-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.team-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.team-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.team-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.team-agent-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-agent-name h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.team-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.team-badge-default {
+  background: var(--accent-light, #e3f2fd);
+  color: var(--accent);
+}
+
+.team-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.team-status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.team-status-inactive {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.team-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.team-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.team-value {
+  color: var(--text);
+  text-align: right;
+  flex: 1;
+}
+
+.team-model {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.team-provider {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.team-strengths {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.team-workspace {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Models Grid */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.model-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s;
+}
+
+.model-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.model-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.model-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.model-provider {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 2px 6px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+}
+
+.model-strengths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.strength-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--accent-light, #e3f2fd);
+  color: var(--accent);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.model-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.model-cost {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.model-alias {
+  font-family: 'Courier New', monospace;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .models-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "agents": [
+    {
+      "id": "main",
+      "name": "James",
+      "group": "💬 General / Personal",
+      "groupId": null,
+      "channel": "telegram",
+      "model": "anthropic/claude-sonnet-4-5-20250929",
+      "modelAlias": "sonnet",
+      "status": "active",
+      "workspace": "/home/ser/clawd",
+      "isDefault": true
+    },
+    {
+      "id": "parametric-model",
+      "name": "James (Parametric)",
+      "group": "🔧 Shed Configurator",
+      "groupId": "-5142783181",
+      "channel": "telegram",
+      "model": "anthropic/claude-sonnet-4-5-20250929",
+      "modelAlias": "sonnet",
+      "status": "active",
+      "workspace": "/home/ser/clawd/agents/parametric-model",
+      "isDefault": false
+    },
+    {
+      "id": "whelpley-farm",
+      "name": "James (Farm)",
+      "group": "🏡 Whelpley Farm",
+      "groupId": "-1003851091646",
+      "channel": "telegram",
+      "model": "anthropic/claude-sonnet-4-5-20250929",
+      "modelAlias": "sonnet",
+      "status": "active",
+      "workspace": "/home/ser/clawd/agents/whelpley-farm",
+      "isDefault": false
+    }
+  ],
+  "availableModels": [
+    {
+      "id": "anthropic/claude-sonnet-4-5-20250929",
+      "alias": "sonnet",
+      "provider": "Anthropic",
+      "name": "Claude Sonnet 4.5",
+      "strengths": ["Code", "Analysis", "Instruction following"],
+      "cost": "Medium"
+    },
+    {
+      "id": "openai/gpt-4-turbo",
+      "alias": "gpt4",
+      "provider": "OpenAI",
+      "name": "GPT-4 Turbo",
+      "strengths": ["Creative writing", "Speed", "Broad knowledge"],
+      "cost": "High"
+    },
+    {
+      "id": "google/gemini-1.5-pro",
+      "alias": "gemini",
+      "provider": "Google",
+      "name": "Gemini 1.5 Pro",
+      "strengths": ["Long context", "Speed", "Multimodal"],
+      "cost": "Low"
+    }
+  ],
+  "lastUpdated": "2026-03-08T12:05:00Z"
+}
